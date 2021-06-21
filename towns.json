@@ -1,0 +1,22 @@
+{
+    "towns": [
+        {
+            "name": "Tarrey",
+            "x": 500,
+            "y": 500,
+            "resource": "cobblestone"
+        },
+        {
+            "name": "Gerudo",
+            "x": 700,
+            "y": 300,
+            "resource": "hide armour"
+        },
+        {
+            "name": "Hateno",
+            "x": 200,
+            "y": 200,
+            "resource": "nitre"
+        }
+    ]
+}
