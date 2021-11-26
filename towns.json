@@ -10,7 +10,7 @@
             "name": "Gerudo",
             "x": 700,
             "y": 300,
-            "resource": "hide armour"
+            "resource": "hide"
         },
         {
             "name": "Hateno",

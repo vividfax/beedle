@@ -6,21 +6,38 @@ class Town {
         this.name = json.name;
         this.resource = json.resource;
         this.visiting = false;
+
+        this.radius = 60;
+
+        this.waitingForResource = false;
+    }
+
+    update() {
+
+        if (player.backpack[this.resource] > 0) {
+            this.waitingForResource = true;
+        } else {
+            this.waitingForResource = false;
+        }
     }
 
     display() {
 
+        push();
+
         noStroke();
 
-        if (this.visiting) {
-            fill("#aaa");
+        if (this.waitingForResource) {
+            fill("#D4E9B9")
         } else {
             fill("#fff");
         }
-        ellipse(this.pos.x, this.pos.y, 40);
+        ellipse(this.pos.x, this.pos.y, this.radius);
 
         fill("#000");
-        text(this.name + "\n" + this.resource, this.pos.x, this.pos.y)
+        //text(this.name + "\n" + this.resource, this.pos.x, this.pos.y)
+
+        pop();
     }
 
     checkVisiting(pos) {
