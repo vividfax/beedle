@@ -31,7 +31,7 @@ class Loot {
         push();
 
         noStroke();
-        fill("#bbb");
+        fill("#ECE184");
         rect(this.pos.x, this.pos.y, this.radius, this.radius);
 
         pop();

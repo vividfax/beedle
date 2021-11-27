@@ -12,6 +12,8 @@ let loots = [];
 let score = 0;
 let scoreTextSize = 0;
 
+let pg;
+
 function preload() {
 
     img = loadImage("beedle.png");
@@ -26,6 +28,7 @@ function setup() {
     imageMode(CENTER);
     textAlign(CENTER, CENTER);
     document.addEventListener('contextmenu', event => event.preventDefault());
+    pg = createGraphics(windowWidth, windowHeight);
 
     player = new Player(width/2, height/2, img, backpackJson.resources);
 
@@ -38,6 +41,8 @@ function setup() {
     for (let i = 0; i < 80; i++) {
         loots[i] = new Loot();
     }
+
+    pg.background("#ccc");
 }
 
 function draw() {
@@ -79,7 +84,8 @@ function update() {
 
 function display() {
 
-    background("#ccc");
+    clear();
+    image(pg, width/2, height/2);
 
     displayScore();
 

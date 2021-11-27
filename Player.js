@@ -3,6 +3,8 @@ class Player {
     constructor(x, y, img, backpack) {
 
         this.pos = createVector(x, y);
+        this.moved = false;
+
         this.img = img;
         this.visiting;
 
@@ -20,6 +22,8 @@ class Player {
     }
 
     update() {
+
+        this.moved = false;
 
         if (this.velocity < 1) {
             this.velocity += 0.002;
@@ -51,6 +55,8 @@ class Player {
     }
 
     move(vector) {
+
+        this.moved = true;
 
         let targetPos = createVector(vector.x - this.pos.x, vector.y - this.pos.y);
 
@@ -103,6 +109,15 @@ class Player {
     }
 
     display() {
+
+        if (this.moved) {
+            let pixel = pg.get(this.pos.x, this.pos.y);
+            pixel[0]++;
+            pixel[1]++;
+            pixel[2]++;
+            pg.set(this.pos.x, this.pos.y, color(pixel));
+            pg.updatePixels();
+        }
 
         push();
 
