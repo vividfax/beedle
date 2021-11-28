@@ -43,10 +43,13 @@ class Adventurer {
                 this.isRare = false;
                 rareCount--;
                 player.isCarryingRare = true;
+                player.rareCount++;
 
             } else if (this.isCarrying) {
                 player.velocity = 0.1;
                 this.isCarrying = false;
+                player.isCarryingRare = false;
+                player.rareCount = 0;
 
                 // player.addToBackpack();
                 // player.addToBackpack();

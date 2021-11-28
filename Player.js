@@ -13,6 +13,7 @@ class Player {
         this.velocity = 1;
 
         this.isCarryingRare = false;
+        this.rareCount = 0;
 
         this.backpack = {
             cobblestone: 0,
@@ -32,7 +33,8 @@ class Player {
             if (this.checkProximity(towns[i].pos.x, towns[i].pos.y, this.radius/2 + towns[i].radius/2)) {
 
                 if (this.isCarryingRare) {
-                    score += 20;
+                    score += 20 * this.rareCount;
+                    this.rareCount = 0;
                     this.isCarryingRare = false;
                 }
                 this.velocity = 1;
