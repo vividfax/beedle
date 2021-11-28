@@ -61,7 +61,6 @@ class Adventurer {
                     this.isRare = false;
                     rareCount--;
                     this.isCarrying = false;
-                    console.log("dump rare");
                 } else if (this.isCarrying) {
                     this.isCarrying = false;
                 }

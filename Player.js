@@ -111,9 +111,9 @@ class Player {
 
         if (this.moved) {
             let pixel = pg.get(this.pos.x, this.pos.y);
-            pixel[0]++;
-            pixel[1]++;
-            pixel[2]++;
+            pixel[0] += 5;
+            pixel[1] += 5;
+            pixel[2] += 5;
             pg.set(this.pos.x, this.pos.y, color(pixel));
             pg.updatePixels();
         }
