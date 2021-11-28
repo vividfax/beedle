@@ -10,6 +10,8 @@ class Town {
         this.radius = 60;
 
         this.waitingForResource = false;
+
+        this.spawn();
     }
 
     update() {
@@ -18,6 +20,41 @@ class Town {
             this.waitingForResource = true;
         } else {
             this.waitingForResource = false;
+        }
+    }
+
+    spawn() {
+
+        let unsuitable;
+
+        this.pos.x = random(100, width-100);
+        this.pos.y = random(100, height-100);
+
+        do {
+            unsuitable = false;
+
+            this.pos.x = random(100, width-100);
+            this.pos.y = random(100, height-100);
+
+            for (let i = 0; i < towns.length; i++) {
+                if (this.checkProximity(towns[i].pos.x, towns[i].pos.y, 300)) {
+
+                    unsuitable = true;
+                }
+            }
+            if (this.checkProximity(player.pos.x, player.pos.y, 100)) {
+
+                unsuitable = true;
+            }
+        } while (unsuitable);
+    }
+
+    checkProximity(x, y, distance) {
+
+        if (dist(x, y, this.pos.x, this.pos.y) < distance) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -35,7 +72,7 @@ class Town {
         ellipse(this.pos.x, this.pos.y, this.radius);
 
         fill("#000");
-        //text(this.name + "\n" + this.resource, this.pos.x, this.pos.y)
+        text(this.name + "\n" + this.resource, this.pos.x, this.pos.y)
 
         pop();
     }

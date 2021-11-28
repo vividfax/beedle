@@ -25,8 +25,7 @@ class Adventurer {
             if (this.checkProximity(loots[i].pos.x, loots[i].pos.y, this.radius/2 + loots[i].radius/2)) {
 
                 this.isCarrying = true;
-                loots[i].pos.x = random(width);
-                loots[i].pos.y = random(height);
+                loots[i].respawn();
 
                 if (!this.isRare && random(50) < 1) {
                     this.isRare = true;

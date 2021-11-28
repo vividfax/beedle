@@ -89,14 +89,14 @@ function display() {
 
     displayScore();
 
+    for (let i = 0; i < loots.length; i++) {
+        loots[i].display();
+    }
     for (let i = 0; i < towns.length; i++) {
         towns[i].display()
     }
     for (let i = 0; i < adventurers.length; i++) {
         adventurers[i].display();
-    }
-    for (let i = 0; i < loots.length; i++) {
-        loots[i].display();
     }
     for (let i = 0; i < targets.length; i++) {
         targets[i].display();
