@@ -1,3 +1,6 @@
+let maxRare = 2;
+let rareCount = 0;
+
 class Adventurer {
 
     constructor() {
@@ -27,8 +30,9 @@ class Adventurer {
                 this.isCarrying = true;
                 loots[i].respawn();
 
-                if (!this.isRare && random(50) < 1) {
+                if (!this.isRare && random(50) < 1 && rareCount < maxRare) {
                     this.isRare = true;
+                    rareCount++;
                 }
             }
         }
@@ -37,6 +41,7 @@ class Adventurer {
             if (this.isRare && this.isCarrying) {
                 this.isCarrying = false;
                 this.isRare = false;
+                rareCount--;
                 player.isCarryingRare = true;
 
             } else if (this.isCarrying) {
@@ -51,7 +56,11 @@ class Adventurer {
 
         for (let i = 0; i < towns.length; i++) {
             if (this.checkProximity(towns[i].pos.x, towns[i].pos.y, this.radius/2 + towns[i].radius/2)) {
-                if (this.isCarrying) {
+                if (this.isCarrying && this.isRare) {
+                    this.isRare = false;
+                    this.rareCount--;
+                    this.isCarrying = false;
+                } else if (this.isCarrying) {
                     this.isCarrying = false;
                 }
                 this.passingThroughTown = true;

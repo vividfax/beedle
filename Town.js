@@ -65,9 +65,9 @@ class Town {
         noStroke();
 
         if (this.waitingForResource) {
-            fill("#D4E9B9")
+            fill("#fff")
         } else {
-            fill("#fff");
+            fill("#ddd");
         }
         ellipse(this.pos.x, this.pos.y, this.radius);
 
