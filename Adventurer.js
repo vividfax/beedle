@@ -56,10 +56,12 @@ class Adventurer {
 
         for (let i = 0; i < towns.length; i++) {
             if (this.checkProximity(towns[i].pos.x, towns[i].pos.y, this.radius/2 + towns[i].radius/2)) {
+
                 if (this.isCarrying && this.isRare) {
                     this.isRare = false;
-                    this.rareCount--;
+                    rareCount--;
                     this.isCarrying = false;
+                    console.log("dump rare");
                 } else if (this.isCarrying) {
                     this.isCarrying = false;
                 }

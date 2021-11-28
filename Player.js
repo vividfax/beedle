@@ -44,7 +44,7 @@ class Player {
             }
         }
         for (let i = 0; i < loots.length; i++) {
-            if (this.checkProximity(loots[i].pos.x, loots[i].pos.y, this.radius/2 + loots[i].radius/2)) {
+            if (this.checkProximity(loots[i].pos.x, loots[i].pos.y, this.radius/2 + loots[i].radius)) {
 
                 loots[i].respawn();
 
