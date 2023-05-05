@@ -112,15 +112,19 @@ class Player {
     display() {
 
         if (this.moved) {
-            let pixel = pg.get(this.pos.x, this.pos.y);
-            pixel[0] += 5;
-            pixel[1] += 5;
-            pixel[2] += 5;
-            pg.set(this.pos.x, this.pos.y, color(pixel));
-            pg.updatePixels();
+            // let pixel = pg.get(this.pos.x, this.pos.y);
+            // pixel[0] -= 5;
+            // pixel[1] -= 5;
+            // pixel[2] -= 5;
+            // pg.set(this.pos.x, this.pos.y, color(pixel));
+            // pg.updatePixels();
         }
 
         push();
+
+        pg.noStroke();
+        pg.fill("#c4c4c4");
+        pg.ellipse(this.pos.x, this.pos.y, 10);
 
         //image(img, this.pos.x, this.pos.y, 750 * 0.1, 650 * 0.1);
 
@@ -131,6 +135,7 @@ class Player {
             stroke("#333");
             fill("#fff");
         }
+
         ellipse(this.pos.x, this.pos.y, this.radius);
 
         pop();

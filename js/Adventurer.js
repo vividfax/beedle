@@ -5,7 +5,14 @@ class Adventurer {
 
     constructor() {
 
-        this.pos = createVector(random(width), random(height));
+        this.init();
+    }
+
+    init() {
+
+        this.birthTown = random(towns);
+
+        this.pos = createVector(this.birthTown.pos.x, this.birthTown.pos.y);
         this.vel = createVector(random(-1, 1), random(-1, 1));
 
         this.radius = 30;
@@ -16,9 +23,15 @@ class Adventurer {
         this.isRare = false;
 
         this.passingThroughTown = false;
+
+        this.maxHitpoints = 60;
+        this.hitpoints = this.maxHitpoints;
+        this.dead = false;
     }
 
     update() {
+
+        if (this.dead) return;
 
         if (this.velocity < 1) {
             this.velocity += 0.001;
@@ -71,7 +84,27 @@ class Adventurer {
             }
         }
 
-        this.move();
+        if (this.dead) return;
+
+        let inFight = false;
+
+        for (let i = 0; i < monsters.length; i++) {
+            if (this.collide(monsters[i])) {
+                if (!inFight) inFight = true;
+                monsters[i].hitpoints--;
+                break;
+            }
+        }
+
+        if (this.hitpoints < 0) {
+            this.dead = true;
+            this.init();
+        }
+
+        if (!inFight) {
+            this.move();
+            if (this.hitpoints < this.maxHitpoints) this.hitpoints++;
+        }
     }
 
     move() {
@@ -90,12 +123,21 @@ class Adventurer {
 
         this.pos.add(velocity);
 
-        if (this.pos.x > width || this.pos.x < 0) {
+        let edgePadding = 50;
+
+        if (this.pos.x > width-edgePadding || this.pos.x < edgePadding) {
             this.vel.x *= -1;
         }
-        if (this.pos.y > height || this.pos.y < 0) {
+        if (this.pos.y > height-edgePadding || this.pos.y < edgePadding) {
             this.vel.y *= -1;
         }
+    }
+
+    collide(collider) {
+
+        if (collider.dead) return false;
+
+        if (dist(collider.pos.x, collider.pos.y, this.pos.x, this.pos.y) < this.radius/2 + collider.radius/2) return true;
     }
 
     checkProximity(x, y, distance) {
@@ -108,6 +150,8 @@ class Adventurer {
     }
 
     display() {
+
+        if (this.dead) return;
 
         push();
 

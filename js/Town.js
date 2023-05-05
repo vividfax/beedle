@@ -1,17 +1,24 @@
+let townNames = ["Gerudo", "Hateno", "Tarrey"];
+let resources = ["hide", "cobblestone", "nitre"];
+
 class Town {
 
-    constructor(json) {
+    constructor(townNumber) {
 
-        this.pos = createVector(json.x, json.y);
-        this.name = json.name;
-        this.resource = json.resource;
+        this.townNumber = townNumber;
+
+        this.edgePadding = 200;
+        this.pos = createVector(random(this.edgePadding, width-this.edgePadding), random(this.edgePadding, height-this.edgePadding));
+
+        while (this.touchingAnotherTown()) this.pos = createVector(random(this.edgePadding, width-this.edgePadding), random(this.edgePadding, height-this.edgePadding));
+
+        this.name = townNames[townNumber];
+        this.resource = resources[townNumber];
         this.visiting = false;
 
         this.radius = 60;
 
         this.waitingForResource = false;
-
-        this.spawn();
     }
 
     update() {
@@ -23,38 +30,20 @@ class Town {
         }
     }
 
-    spawn() {
-
-        let unsuitable;
-
-        this.pos.x = random(100, width-100);
-        this.pos.y = random(100, height-100);
-
-        do {
-            unsuitable = false;
-
-            this.pos.x = random(100, width-100);
-            this.pos.y = random(100, height-100);
-
-            for (let i = 0; i < towns.length; i++) {
-                if (this.checkProximity(towns[i].pos.x, towns[i].pos.y, 300)) {
-
-                    unsuitable = true;
-                }
-            }
-            if (this.checkProximity(player.pos.x, player.pos.y, 100)) {
-
-                unsuitable = true;
-            }
-        } while (unsuitable);
-    }
-
     checkProximity(x, y, distance) {
 
         if (dist(x, y, this.pos.x, this.pos.y) < distance) {
             return true;
         } else {
             return false;
+        }
+    }
+
+    touchingAnotherTown() {
+
+        for (let i = 0; i < towns.length; i++) {
+
+            if (dist(this.pos.x, this.pos.y, towns[i].pos.x, towns[i].pos.y) < 300) return true;
         }
     }
 
@@ -67,7 +56,7 @@ class Town {
         if (this.waitingForResource) {
             fill("#fff")
         } else {
-            fill("#ddd");
+            fill("#aaa");
         }
         ellipse(this.pos.x, this.pos.y, this.radius);
 

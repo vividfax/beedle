@@ -59,7 +59,7 @@ class Loot {
 
         noStroke();
         fill("#ECE184");
-        rect(this.pos.x, this.pos.y, this.radius, this.radius);
+        ellipse(this.pos.x, this.pos.y, this.radius);
 
         pop();
     }
