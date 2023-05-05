@@ -1,11 +1,20 @@
 class Loot {
 
-    constructor() {
+    constructor(x, y, type) {
 
-        this.pos = createVector(random(width), random(height));
-        this.radius = 10;
+        if (x != undefined && y != undefined) {
+            this.pos = createVector(x, y);
+            this.x = x;
+            this.y = y;
+        }
+        else {
+            this.x = random(width);
+            this.y = random(height);
+        }
 
-        this.respawn();
+        this.radius = 20;
+
+        this.type = type;
     }
 
     update() {
@@ -14,52 +23,27 @@ class Loot {
 
     checkProximity(x, y, distance) {
 
-        if (dist(x, y, this.pos.x, this.pos.y) < distance) {
+        if (dist(x, y, this.x, this.y) < distance) {
             return true;
         } else {
             return false;
         }
     }
 
-    respawn() {
+    destruct() {
 
-        this.pos.x = random(width);
-        this.pos.y = random(height);
-
-        let unsuitable = false;
-
-        do {
-            unsuitable = false;
-
-            this.pos.x = random(width);
-            this.pos.y = random(height);
-
-            for (let i = 0; i < towns.length; i++) {
-                if (this.checkProximity(towns[i].pos.x, towns[i].pos.y, this.radius + towns[i].radius/2)) {
-
-                    unsuitable = true;
-                }
-            }
-            for (let i = 0; i < adventurers.length; i++) {
-                if (this.checkProximity(adventurers[i].pos.x, adventurers[i].pos.y, this.radius + adventurers[i].radius*2)) {
-
-                    unsuitable = true;
-                }
-            }
-            if (this.checkProximity(player.pos.x, player.pos.y, this.radius + player.radius*2)) {
-
-                unsuitable = true;
-            }
-        } while (unsuitable);
+        let index = loots.indexOf(this);
+        if (index != -1) loots.splice(index, 1);
     }
 
     display() {
 
         push();
 
-        noStroke();
-        fill("#ECE184");
-        ellipse(this.pos.x, this.pos.y, this.radius);
+        image(lootImages[this.type], this.x, this.y, 20, 20);
+            // noStroke();
+            // fill("#ECE184");
+            // ellipse(this.x, this.y, this.radius);
 
         pop();
     }

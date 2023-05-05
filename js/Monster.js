@@ -1,3 +1,6 @@
+let bigBadCount = 0;
+let bigBadMax = 2;
+
 class Monster {
 
     constructor() {
@@ -7,14 +10,23 @@ class Monster {
 
     init() {
 
-        this.pos = createVector(random(width), random(height));
+        this.edgePadding = 200;
+        this.x = random(this.edgePadding, width-this.edgePadding);
+        this.y = random(this.edgePadding, height-this.edgePadding);
 
-        this.radius = random([20, 20, 50]);
-        this.speed = 0.5;
+        this.bigBad = false;
+        if (bigBadCount < bigBadMax && random() < 0.3) {
+            this.bigBad = true;
+            bigBadCount++;
+        }
 
-        this.vel = createVector(random(-this.speed, this.speed), random(-this.speed, this.speed));
+        this.radius = this.bigBad ? 50 : 20;
+        this.speed = 0.8 - this.radius/100;
+        this.velocityX = random(-this.speed, this.speed);
+        this.velocityY = random(-this.speed, this.speed);
 
-        this.hitpoints = this.radius*2;
+        this.maxHitpoints = this.radius*2;
+        this.hitpoints = this.maxHitpoints;
         this.dead = false;
     }
 
@@ -28,47 +40,56 @@ class Monster {
             if (this.collide(adventurers[i])) {
                 if (!inFight) inFight = true;
                 adventurers[i].hitpoints--;
-                break;
-            }
-        }
 
-        if (this.hitpoints < 0) {
-            this.dead = true;
-            this.init();
+                if (this.hitpoints < 0) {
+                    this.dead = true;
+                    loots.push(new Loot(this.x, this.y, "bones"));
+                    if (adventurers[i].inventory.gems < 5) adventurers[i].inventory.gems++;
+                    if (this.bigBad) bigBadCount--;
+                    this.init();
+                    return;
+                }
+            }
         }
 
         if (!inFight) {
             this.move();
+            if (this.hitpoints < this.maxHitpoints) this.hitpoints += 0.1;
         }
     }
 
     move() {
 
-        let velocity = createVector(this.vel.x, this.vel.y);
+        let pos = createVector(this.x, this.y);
 
-        if (random() < 0.01) {
-            velocity = createVector(random(-this.speed, this.speed), random(-this.speed, this.speed));
-        } else if (random() < 0.0005) {
-            velocity = createVector(0, 0);
+        if (random() < 0.05) {
+            this.velocityX = random(-this.speed, this.speed);
+            this.velocityY = random(-this.speed, this.speed);
+        } else if (random() < 0.001) {
+            this.velocityX = 0;
+            this.velocityY = 0;
         }
 
-        this.pos.add(velocity);
+        pos.add(createVector(this.velocityX, this.velocityY));
 
         let edgePadding = 50;
 
-        if (this.pos.x > width-edgePadding || this.pos.x < edgePadding) {
-            this.vel.x *= -1;
+        if ((this.x > width-edgePadding && this.velocityX > 0) || (this.x < edgePadding && this.velocityX < 0)) {
+            this.velocityX *= -1;
         }
-        if (this.pos.y > height-edgePadding || this.pos.y < edgePadding) {
-            this.vel.y *= -1;
+        if ((this.y > height-edgePadding && this.velocityY > 0) || (this.y < edgePadding && this.velocityY < 0)) {
+            this.velocityY *= -1;
         }
+
+        this.x = pos.x;
+        this.y = pos.y;
     }
 
     collide(collider) {
 
         if (collider.dead) return false;
 
-        if (dist(collider.pos.x, collider.pos.y, this.pos.x, this.pos.y) < this.radius/2 + collider.radius/2) return true;
+        if (dist(collider.x, collider.y, this.x, this.y) < this.radius/2 + collider.radius/2) return true;
     }
 
     display() {
@@ -80,7 +101,7 @@ class Monster {
         stroke("#fff");
 
         fill(0);
-        ellipse(this.pos.x, this.pos.y, this.radius);
+        ellipse(this.x, this.y, this.radius);
 
         pop();
     }

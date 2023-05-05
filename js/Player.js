@@ -1,8 +1,9 @@
 class Player {
 
-    constructor(x, y, img, backpack) {
+    constructor(x, y, img) {
 
-        this.pos = createVector(x, y);
+        this.x = x;
+        this.y = y;
         this.moved = false;
 
         this.img = img;
@@ -15,10 +16,11 @@ class Player {
         this.isCarryingRare = false;
         this.rareCount = 0;
 
-        this.backpack = {
-            cobblestone: 0,
-            hide: 0,
-            nitre: 0,
+        this.inventory = {
+            stone: 0,
+            wood: 0,
+            bones: 0,
+            gems: 0,
         };
     }
 
@@ -30,7 +32,7 @@ class Player {
             this.velocity += 0.002;
         }
         for (let i = 0; i < towns.length; i++) {
-            if (this.checkProximity(towns[i].pos.x, towns[i].pos.y, this.radius/2 + towns[i].radius/2)) {
+            if (this.checkProximity(towns[i].x, towns[i].y, this.radius/2 + towns[i].radius/2)) {
 
                 if (this.isCarryingRare) {
                     score += 20 * this.rareCount;
@@ -39,18 +41,17 @@ class Player {
                 }
                 this.velocity = 1;
 
-                if (this.backpack[towns[i].resource] > 0) {
-                    score += this.backpack[towns[i].resource];
-                    this.backpack[towns[i].resource] = 0;
+                if (this.inventory[towns[i].resource] > 0) {
+                    score += this.inventory[towns[i].resource];
+                    this.inventory[towns[i].resource] = 0;
                 }
             }
         }
         for (let i = 0; i < loots.length; i++) {
-            if (this.checkProximity(loots[i].pos.x, loots[i].pos.y, this.radius/2 + loots[i].radius)) {
+            if (this.checkProximity(loots[i].x, loots[i].y, this.radius/2 + loots[i].radius)) {
 
-                loots[i].respawn();
-
-                this.addToBackpack();
+                this.addToinventory(loots[i].type);
+                loots[i].destruct();
             }
         }
     }
@@ -59,31 +60,28 @@ class Player {
 
         this.moved = true;
 
-        let targetPos = createVector(vector.x - this.pos.x, vector.y - this.pos.y);
+        let pos = createVector(this.x, this.y);
+        let targetPos = createVector(vector.x - this.x, vector.y - this.y);
 
-        if (this.pos.dist(vector) > 1) {
+        if (dist(vector.x, vector.y, this.x, this.y) > 1) {
 
             targetPos.normalize().mult(this.velocity);
-            this.pos.add(targetPos);
+            pos.add(targetPos);
+
+            this.x = pos.x;
+            this.y = pos.y;
         }
     }
 
-    addToBackpack() {
+    addToinventory(lootType) {
 
-        let resource = int(random(3));
-
-        if (resource == 0) {
-            this.backpack.cobblestone++;
-        } else if (resource == 1) {
-            this.backpack.hide++
-        } else if (resource == 2) {
-            this.backpack.nitre++
-        } else {
-            console.log("ERR901409");
-        }
+        if (lootType == "stone") this.inventory.stone++;
+        else if (lootType == "wood") this.inventory.wood++;
+        else if (lootType == "bones") this.inventory.bones++;
+        else if (lootType == "gems") this.inventory.gems++;
     }
 
-    displayBackpack() {
+    displayinventory() {
 
         push();
 
@@ -92,8 +90,8 @@ class Player {
 
         let i = 0;
 
-        for (let resource in this.backpack) {
-            let label = resource + " " + this.backpack[resource];
+        for (let resource in this.inventory) {
+            let label = resource + " " + this.inventory[resource];
             text(label, 20, 30 + i * 30);
             i++;
         }
@@ -102,7 +100,7 @@ class Player {
 
     checkProximity(x, y, distance) {
 
-        if (dist(x, y, this.pos.x, this.pos.y) < distance) {
+        if (dist(x, y, this.x, this.y) < distance) {
             return true;
         } else {
             return false;
@@ -112,21 +110,21 @@ class Player {
     display() {
 
         if (this.moved) {
-            // let pixel = pg.get(this.pos.x, this.pos.y);
+            // let pixel = pg.get(this.x, this.y);
             // pixel[0] -= 5;
             // pixel[1] -= 5;
             // pixel[2] -= 5;
-            // pg.set(this.pos.x, this.pos.y, color(pixel));
+            // pg.set(this.x, this.y, color(pixel));
             // pg.updatePixels();
         }
 
         push();
 
-        pg.noStroke();
-        pg.fill("#c4c4c4");
-        pg.ellipse(this.pos.x, this.pos.y, 10);
+        // pg.noStroke();
+        // pg.fill(255, 255, 255, 10);
+        // pg.ellipse(this.x, this.y, 10);
 
-        //image(img, this.pos.x, this.pos.y, 750 * 0.1, 650 * 0.1);
+        //image(img, this.x, this.y, 750 * 0.1, 650 * 0.1);
 
         if (this.isCarryingRare) {
             stroke("#333")
@@ -136,7 +134,7 @@ class Player {
             fill("#fff");
         }
 
-        ellipse(this.pos.x, this.pos.y, this.radius);
+        ellipse(this.x, this.y, this.radius);
 
         pop();
     }
