@@ -12,9 +12,14 @@ class Adventurer {
 
     init(fresh) {
 
-        this.edgePadding = 200;
-        this.x = random(this.edgePadding, width-this.edgePadding);
-        this.y = random(this.edgePadding, height-this.edgePadding);
+        if (!fresh) {
+            this.x = this.checkpoint.x;
+            this.y = this.checkpoint.y;
+        } else {
+            this.edgePadding = 200;
+            this.x = random(this.edgePadding, width-this.edgePadding);
+            this.y = random(this.edgePadding, height-this.edgePadding);
+        }
 
         this.speed = 1;
         this.velocityX = random(-this.speed, this.speed);
