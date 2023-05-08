@@ -52,6 +52,9 @@ class Adventurer {
             bones: 0,
             gems: 0,
         }
+
+        this.headingHome = false;
+        this.headingTo = 0;
     }
 
     update() {
@@ -141,6 +144,13 @@ class Adventurer {
         }
 
         if (!this.dead && !inFight) {
+
+            if (!this.headingHome && !this.passingThroughTown && this.inventory.gems >= 4) {
+                this.headingHome = true;
+                this.headingTo = this.getClosestTown();
+            } else if (this.headingHome && this.passingThroughTown) {
+                this.headingHome = false;
+            }
             this.move();
             if (this.hitpoints < this.maxHitpoints) this.hitpoints += 0.5;
 
@@ -152,6 +162,18 @@ class Adventurer {
     }
 
     move() {
+
+        if (this.headingHome) {
+
+            let direction = createVector(this.headingTo.x - this.x, this.headingTo.y - this.y);
+            direction.normalize();
+            direction.mult(this.speed);
+
+            this.x += direction.x;
+            this.y += direction.y;
+
+            return;
+        }
 
         let pos = createVector(this.x, this.y);
 
@@ -280,6 +302,24 @@ class Adventurer {
                 loots.push(new Loot(this.x+random(-offset, offset), this.y+random(-offset, offset), key.toString()));
             }
         }
+    }
+
+    getClosestTown() {
+
+        let shortestDist = -1;
+        let closestTown = -1;
+
+        for (let i = 0; i < towns.length; i++) {
+
+            let distance = dist(this.x, this.y, towns[i].x, towns[i].y);
+
+            if (shortestDist == -1 || distance < shortestDist) {
+                shortestDist = distance;
+                closestTown = towns[i];
+            }
+        }
+
+        return closestTown;
     }
 
     hover() {
