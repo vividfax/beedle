@@ -72,7 +72,7 @@ class Monster {
 
         pos.add(createVector(this.velocityX, this.velocityY));
 
-        let edgePadding = 50;
+        let edgePadding = 100;
 
         if ((this.x > width-edgePadding && this.velocityX > 0) || (this.x < edgePadding && this.velocityX < 0)) {
             this.velocityX *= -1;

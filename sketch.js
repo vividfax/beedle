@@ -21,6 +21,7 @@ let worldHeight = 982;
 
 let lootImages = {};
 let adventurerImages = [];
+let coinImage;
 
 let popupSelected;
 
@@ -34,6 +35,8 @@ function preload() {
     for (let i = 0; i < 12; i++) {
         adventurerImages.push(loadImage("./images/hero" + i + ".png"));
     }
+
+    coinImage = loadImage("./images/Coin.png");
 }
 
 function setup() {
@@ -58,34 +61,6 @@ function setup() {
     for (let i = 0; i < 17; i++) {
         monsters.push(new Monster());
     }
-
-    // for (let i = 0; i < 3; i++) {
-    //     let edgePadding = 200;
-    //     let pos = {
-    //         x: random(edgePadding, width-edgePadding),
-    //         y: random(edgePadding, height-edgePadding)
-    //     }
-    //     pos = createMountainRange(pos.x, pos.y);
-    //     pos = createMountainRange(pos.x, pos.y);
-    //     pos = createMountainRange(pos.x, pos.y);
-    //     pos = createMountainRange(pos.x, pos.y);
-    //     pos = createMountainRange(pos.x, pos.y);
-    //     pos = createMountainRange(pos.x, pos.y);
-    // }
-
-    // for (let i = 0; i < 3; i++) {
-    //     let edgePadding = 200;
-    //     let pos = {
-    //         x: random(edgePadding, width-edgePadding),
-    //         y: random(edgePadding, height-edgePadding)
-    //     }
-    //     pos = createForests(pos.x, pos.y);
-    //     pos = createForests(pos.x, pos.y);
-    //     pos = createForests(pos.x, pos.y);
-    //     pos = createForests(pos.x, pos.y);
-    //     pos = createForests(pos.x, pos.y);
-    //     pos = createForests(pos.x, pos.y);
-    // }
 
     pg.background("#ccc");
     createBackground();
@@ -150,8 +125,6 @@ function display() {
     clear();
     image(pg, width/2, height/2);
 
-    displayScore();
-
     for (let i = 0; i < mountains.length; i++) {
         mountains[i].display();
     }
@@ -182,14 +155,14 @@ function display() {
 
     player.display();
 
-    displayMapCutout();
-
+    image(mapCutoutLayer, width/2, height/2);
+    displayCoinCount();
     displayPopup();
 }
 
 function mousePressed() {
 
-    let edgePadding = 50;
+    let edgePadding = 100;
 
     if (mouseX > width-edgePadding || mouseX < edgePadding || mouseY > height-edgePadding || mouseY < edgePadding) return;
 
@@ -204,26 +177,6 @@ function keyPressed() {
 
     if (keyCode == ESCAPE) {
         targets = [];
-    }
-}
-
-function displayScore() {
-
-    if (score > 0) {
-
-        if (scoreTextSize < score + 20) {
-            scoreTextSize++;
-        }
-
-        push();
-        translate(width/2, height/2 + scoreTextSize * 0.07);
-
-        fill("#ddd");
-        textAlign(CENTER, CENTER);
-        textSize(scoreTextSize);
-        text(score, 0, 0);
-
-        pop();
     }
 }
 
@@ -333,7 +286,31 @@ function createMapCutout() {
     mapCutoutLayer.endShape(CLOSE);
 }
 
-function displayMapCutout() {
+function displayCoinCount() {
 
-    image(mapCutoutLayer, width/2, height/2);
+    push();
+
+    noStroke();
+    fill("#333");
+    beginShape();
+    vertex(0, 0);
+    vertex(150, 0);
+    vertex(0, 200);
+    endShape(CLOSE);
+
+    image(coinImage, 10, 10, 20, 20);
+    fill(255);
+    textAlign(LEFT);
+    textSize(20);
+    text(score, 30, 10);
+
+    let i = 1;
+
+    for (let [key, value] of Object.entries(player.inventory)) {
+        image(lootImages[key.toString()], 10, 10 + 25*i, 20, 20);
+        text(value, 30, 10 + 25*i);
+        i++;
+    }
+
+    pop();
 }

@@ -20,13 +20,3 @@ class Mountain {
         // ellipse(this.x, this.y, this.radius);
     }
 }
-
-function createMountainRange(x, y) {
-
-    let spacing = 40;
-    mountains.push(new Mountain(x, y));
-    x += random(-spacing, spacing);
-    y += random(-spacing, spacing);
-
-    return { x: x, y: y};
-}

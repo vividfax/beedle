@@ -196,7 +196,7 @@ class Adventurer {
         this.velocityX = velocity.x;
         this.velocityY = velocity.y;
 
-        let edgePadding = 50;
+        let edgePadding = 100;
 
         if ((this.x > width-edgePadding && this.velocityX > 0) || (this.x < edgePadding && this.velocityX < 0)) {
             this.velocityX *= -1;

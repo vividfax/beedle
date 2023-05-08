@@ -47,10 +47,13 @@ class Player {
                 // }
 
                 for (let [key, value] of Object.entries(this.inventory)) {
-                    if (value > 0) {
-                        towns[i].inventory[key.toString()] += value;
-                        score += value;
-                        this.inventory[key.toString()] = 0;
+                    if (value > 0 && (towns[i].inventory[key.toString()] < 100 || key.toString() == "gems")) {
+
+                        towns[i].inventory[key.toString()] ++;
+                        score++;
+                        this.inventory[key.toString()]--;
+
+                        if (key.toString() == "gems") score+=2;
                     }
                 }
             }
@@ -65,6 +68,22 @@ class Player {
     }
 
     move(vector) {
+
+        this.velocity = 1;
+
+        for (let i = 0; i < adventurers.length; i++) {
+            if (this.collide(adventurers[i])) {
+                this.velocity = 0.2;
+                break;
+            }
+        }
+
+        for (let i = 0; i < monsters.length; i++) {
+            if (this.collide(monsters[i])) {
+                this.velocity = 0.2;
+                break;
+            }
+        }
 
         this.moved = true;
 
@@ -105,6 +124,12 @@ class Player {
         }
         pop();
     }
+
+    collide(collider) {
+
+        if (dist(collider.x, collider.y, this.x, this.y) < this.radius/2 + collider.radius/2) return true;
+    }
+
 
     checkProximity(x, y, distance) {
 
