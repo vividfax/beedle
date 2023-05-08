@@ -40,6 +40,13 @@ class Town {
             this.waitingForResource = false;
         }
 
+        if (frameCount % 300 == 1) {
+            for (let [key, value] of Object.entries(this.inventory)) {
+                if (value > 0) this.inventory[key.toString()]--;
+            }
+        }
+
+
         this.hover();
     }
 

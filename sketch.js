@@ -289,7 +289,7 @@ function createTerrain() {
 
             if (perlin > 0.65) {
                 mountains.push(new Mountain(i, j));
-            } else if (perlin > 0.45 && perlin < 0.55) {
+            } else if (perlin > 0.45 && perlin < 0.5) {
                 forests.push(new Forest(i, j));
             }
         }

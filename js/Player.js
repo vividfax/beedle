@@ -41,9 +41,17 @@ class Player {
                 }
                 this.velocity = 1;
 
-                if (this.inventory[towns[i].resource] > 0) {
-                    score += this.inventory[towns[i].resource];
-                    this.inventory[towns[i].resource] = 0;
+                // if (this.inventory[towns[i].resource] > 0) {
+                //     score += this.inventory[towns[i].resource];
+                //     this.inventory[towns[i].resource] = 0;
+                // }
+
+                for (let [key, value] of Object.entries(this.inventory)) {
+                    if (value > 0) {
+                        towns[i].inventory[key.toString()] += value;
+                        score += value;
+                        this.inventory[key.toString()] = 0;
+                    }
                 }
             }
         }
