@@ -50,7 +50,6 @@ function setup() {
     imageMode(CENTER);
     textAlign(CENTER, CENTER);
     canvas.addEventListener('contextmenu', event => event.preventDefault());
-    pg = createGraphics(width, height);
 
     player = new Player(width/2, height/2);
 
@@ -66,7 +65,6 @@ function setup() {
         monsters.push(new Monster());
     }
 
-    pg.background("#ccc");
     createBackground();
     createTerrain();
     createMapCutout();
@@ -127,7 +125,7 @@ function update() {
 function display() {
 
     clear();
-    image(pg, width/2, height/2);
+    image(pg, width/2, height/2, width, height);
 
     for (let i = 0; i < mountains.length; i++) {
         mountains[i].display();
@@ -208,23 +206,31 @@ function displayPopup() {
 
 function createBackground() {
 
-    let colorA = 0;
-    let colorB = 255;
+    let multiplier = 1;
+    let w = width * multiplier;
+    let h = height * multiplier;
 
-    for (let i = 0; i < width; i++) {
-        for (let j = 0; j < height; j++) {
+    pg = createGraphics(w, h);
+
+    for (let i = 0; i < w; i++) {
+        for (let j = 0; j < h; j++) {
 
             let col;
-            let perlin = noise(i*0.004, j*0.004)
 
-            if (perlin < 0.3) {
-                col = lerpColor(color(0, 0, 150), color(0, 150, 150), perlin);
-            } else if (perlin < 0.55) {
-                col = lerpColor(color(150, 255, 100), color(0, 40, 0), perlin);
-            } else if (perlin > 0.7) {
-                col = lerpColor(color(0), color(255), perlin);
+            if (random() < 0.1 || (i < 200*multiplier && random(0.2/multiplier) < 1/(i)) || (j < 200*multiplier && random(0.2/multiplier) < 1/(j)) || (i > w-200*multiplier && random(0.2/multiplier) < 1/(w-i)) || (j > h-200*multiplier && random(0.2/multiplier) < 1/(h-j))) {
+                col = color(112);
             } else {
-                col = lerpColor(color(255), color(0), perlin);
+                let perlin = noise(i*0.004/multiplier, j*0.004/multiplier)
+
+                if (perlin < 0.3) {
+                    col = lerpColor(color(0, 0, 150), color(0, 150, 150), perlin);
+                } else if (perlin < 0.55) {
+                    col = lerpColor(color(150, 255, 100), color(0, 40, 0), perlin);
+                } else if (perlin > 0.7) {
+                    col = lerpColor(color(0), color(255), perlin);
+                } else {
+                    col = lerpColor(color(255), color(0), perlin);
+                }
             }
 
             pg.set(i, j, color(col));
@@ -232,8 +238,31 @@ function createBackground() {
     }
     pg.updatePixels();
 
-    pg.fill(173, 163, 126, 120);
-    pg.rect(0, 0, width, height);
+    pg.stroke(112);
+    let offset = 10;
+
+    let topLeft = [width/3 + random(-offset, offset), height/3 + random(-offset, offset)]
+    let topRight = [width/3*2 + random(-offset, offset), height/3 + random(-offset, offset)]
+    let bottomLeft = [width/3 + random(-offset, offset), height/3*2 + random(-offset, offset)]
+    let bottomRight = [width/3*2 + random(-offset, offset), height/3*2 + random(-offset, offset)]
+
+    pg.line(0, height/3 + random(-offset, offset), topLeft[0], topLeft[1]);
+    pg.line(width, height/3 + random(-offset, offset), topRight[0], topRight[1]);
+    pg.line(0, height/3*2 + random(-offset, offset), bottomLeft[0], bottomLeft[1]);
+    pg.line(width, height/3*2 + random(-offset, offset), bottomRight[0], bottomRight[1]);
+    pg.line(width/3 + random(-offset, offset), 0, topLeft[0], topLeft[1]);
+    pg.line(width/3 + random(-offset, offset), height, bottomLeft[0], bottomLeft[1]);
+    pg.line(width/3*2 + random(-offset, offset), 0, topRight[0], topRight[1]);
+    pg.line(width/3*2 + random(-offset, offset), height, bottomRight[0], bottomRight[1]);
+    pg.line(topLeft[0], topLeft[1], topRight[0], topRight[1]);
+    pg.line(bottomLeft[0], bottomLeft[1], bottomRight[0], bottomRight[1]);
+    pg.line(topLeft[0], topLeft[1], bottomLeft[0], bottomLeft[1]);
+    pg.line(topRight[0], topRight[1], bottomRight[0], bottomRight[1]);
+
+
+    pg.noStroke();
+    pg.fill(173, 163, 126, 140);
+    pg.rect(0, 0, w, h);
     pg.filter(POSTERIZE, 40);
 }
 
