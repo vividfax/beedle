@@ -1,5 +1,5 @@
 let bigBadCount = 0;
-let bigBadMax = 2;
+let bigBadMax = 3;
 
 class Monster {
 

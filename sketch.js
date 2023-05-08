@@ -195,6 +195,7 @@ function displayPopup() {
     translate(popupSelected.x + 30, popupSelected.y);
     textAlign(LEFT, TOP);
 
+    noStroke();
     fill(255);
     rect(0, 0, 50, 60);
     fill(0);
