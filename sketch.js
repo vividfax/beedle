@@ -71,6 +71,8 @@ function setup() {
     createBackground();
     createTerrain();
     createMapCutout();
+
+    for (let i = 0; i < 700; i++) draw();
 }
 
 function draw() {
