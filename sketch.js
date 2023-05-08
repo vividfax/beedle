@@ -14,19 +14,17 @@ let score = 0;
 let scoreTextSize = 0;
 
 let pg;
+let mapCutoutLayer;
 
 let worldWidth = 1512;
 let worldHeight = 982;
 
-let mapBorderImage;
 let lootImages = {};
 let adventurerImages = [];
 
 let popupSelected;
 
 function preload() {
-
-    mapBorderImage = loadImage("./images/mapBorder.png");
 
     lootImages.stone = loadImage("./images/Stone.png");
     lootImages.wood = loadImage("./images/Wood.png");
@@ -92,6 +90,7 @@ function setup() {
     pg.background("#ccc");
     createBackground();
     createTerrain();
+    createMapCutout();
 }
 
 function draw() {
@@ -183,7 +182,7 @@ function display() {
 
     player.display();
 
-    image(mapBorderImage, width/2, height/2, width, height);
+    displayMapCutout();
 
     displayPopup();
 }
@@ -295,4 +294,46 @@ function createTerrain() {
             }
         }
     }
+}
+
+function createMapCutout() {
+
+    mapCutoutLayer = createGraphics(width, height);
+    mapCutoutLayer.noStroke();
+    mapCutoutLayer.fill("#333");
+
+    mapCutoutLayer.beginShape();
+    mapCutoutLayer.vertex(0, 0);
+    mapCutoutLayer.vertex(0, height);
+    mapCutoutLayer.vertex(width, height);
+    mapCutoutLayer.vertex(width, 0);
+
+    mapCutoutLayer.beginContour();
+
+    let interval = 50;
+    let bumpiness = 5;
+
+    for (let i = bumpiness; i < width; i += interval) {
+        mapCutoutLayer.vertex(i+random(-bumpiness, bumpiness), bumpiness+random(-bumpiness, bumpiness));
+    }
+
+    for (let i = bumpiness; i < height; i += interval) {
+        mapCutoutLayer.vertex(width-bumpiness+random(-bumpiness, bumpiness), i+random(-bumpiness, bumpiness));
+    }
+
+    for (let i = bumpiness; i < width; i += interval) {
+        mapCutoutLayer.vertex(width-i+random(-bumpiness, bumpiness), height-bumpiness+random(-bumpiness, bumpiness));
+    }
+
+    for (let i = bumpiness; i < height; i += interval) {
+        mapCutoutLayer.vertex(bumpiness+random(-bumpiness, bumpiness), height-i+random(-bumpiness, bumpiness));
+    }
+
+    mapCutoutLayer.endContour();
+    mapCutoutLayer.endShape(CLOSE);
+}
+
+function displayMapCutout() {
+
+    image(mapCutoutLayer, width/2, height/2);
 }
