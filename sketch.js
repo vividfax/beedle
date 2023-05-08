@@ -334,13 +334,14 @@ function displayInventory() {
     vertex(0, 250);
     endShape(CLOSE);
 
-    fill(255);
     textAlign(LEFT);
     textSize(20);
 
+    fill("#FFE600");
     image(beetleImage, 10, 10, 25, 25);
     text(beetleScoreCount, 30, 10);
 
+    fill(255);
     image(coinImage, 10, 35, 20, 20);
     text(score, 30, 35);
 
