@@ -98,9 +98,8 @@ class Monster {
 
         push();
 
-        stroke("#fff");
-
-        fill(0);
+        stroke(0);
+        fill(50);
         ellipse(this.x, this.y, this.radius);
 
         pop();

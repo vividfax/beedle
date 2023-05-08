@@ -358,9 +358,10 @@ class Adventurer {
         push();
 
         if (this.carryingBeetle) {
-            strokeWeight(4);
+            let borderWeight = sin(frameCount*3)*3 + 4;
             stroke("#FFE600");
-            ellipse(this.x, this.y, this.radius+4);
+            strokeWeight(borderWeight);
+            ellipse(this.x, this.y, this.radius+borderWeight);
         }
 
         image(adventurerImages[this.number], this.x, this.y, this.radius, this.radius);

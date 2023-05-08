@@ -22,6 +22,7 @@ let worldHeight = 982;
 let lootImages = {};
 let adventurerImages = [];
 let coinImage;
+let playerImage;
 
 let popupSelected;
 
@@ -41,6 +42,8 @@ function preload() {
 
     coinImage = loadImage("./images/Coin.png");
     beetleImage = loadImage("./images/beetle.png");
+    castleImage = loadImage("./images/castle.png");
+    playerImage = loadImage("./images/beedle.png");
 }
 
 function setup() {
@@ -191,7 +194,7 @@ function displayPopup() {
     textAlign(LEFT, TOP);
 
     fill(255);
-    rect(0, 0, 50, 100);
+    rect(0, 0, 50, 60);
     fill(0);
 
     let i = 0;
@@ -273,9 +276,9 @@ function createTerrain() {
 
             let perlin = noise(i*0.004, j*0.004)
 
-            if (perlin > 0.65) {
+            if (perlin > 0.6) {
                 mountains.push(new Mountain(i, j));
-            } else if (perlin > 0.45 && perlin < 0.5) {
+            } else if (perlin > 0.4 && perlin < 0.45) {
                 forests.push(new Forest(i, j));
             }
         }

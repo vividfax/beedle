@@ -163,11 +163,13 @@ class Player {
             stroke("#333")
             fill("#FFE600");
         } else {
+            strokeWeight(2);
             stroke("#333");
             fill("#fff");
         }
 
-        ellipse(this.x, this.y, this.radius);
+        // ellipse(this.x, this.y, this.radius);
+        image(playerImage, this.x, this.y, 750 * 0.1, 650 * 0.1);
 
         pop();
     }

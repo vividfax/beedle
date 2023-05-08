@@ -9,7 +9,7 @@ class Target {
     display() {
 
         noStroke();
-        fill("#888");
+        fill(255);
         ellipse(this.x, this.y, 10);
     }
 

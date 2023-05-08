@@ -91,13 +91,14 @@ class Town {
         noStroke();
 
         // if (this.waitingForResource) {
-            fill("#fff")
+            // fill("#fff")
         // } else {
         //     fill("#aaa");
         // }
-        ellipse(this.x, this.y, this.radius);
+        // ellipse(this.x, this.y, this.radius);
+        image(castleImage, this.x, this.y, this.radius, this.radius);
 
-        fill("#000");
+        fill(255);
         text(this.name, this.x, this.y)
 
         pop();
