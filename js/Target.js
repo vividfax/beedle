@@ -8,9 +8,14 @@ class Target {
 
     display() {
 
-        noStroke();
-        fill(255);
-        ellipse(this.x, this.y, 10);
+        push();
+        translate(this.x, this.y);
+        stroke(255);
+        strokeWeight(2);
+        let size = 5;
+        line(-size, -size, size, size);
+        line(-size, size, size, -size);
+        pop();
     }
 
     collide(collider) {
