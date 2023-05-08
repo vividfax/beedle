@@ -54,7 +54,7 @@ class Monster {
 
         if (!inFight) {
             this.move();
-            if (this.hitpoints < this.maxHitpoints) this.hitpoints += 0.1;
+            if (this.hitpoints < this.maxHitpoints) this.hitpoints += 0.05;
         }
     }
 

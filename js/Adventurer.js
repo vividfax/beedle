@@ -274,12 +274,12 @@ class Adventurer {
 
         for (let i = loots.length-1; i >= 0; i--) {
 
-            if (!this.collide(loots[i])) return;
+            if (!this.collide(loots[i])) continue;
 
-            if (this.collectResource(i, this.inventory.gems, "gems", 5)) return;
-            else if (this.collectResource(i, this.inventory.wood, "wood", 10)) return;
-            else if (this.collectResource(i, this.inventory.stone, "stone", 10)) return;
-            else if (this.collectResource(i, this.inventory.bones, "bones", 10)) return;
+            if (this.collectResource(i, this.inventory.gems, "gems", 5)) continue;
+            else if (this.collectResource(i, this.inventory.wood, "wood", 10)) continue;
+            else if (this.collectResource(i, this.inventory.stone, "stone", 10)) continue;
+            else if (this.collectResource(i, this.inventory.bones, "bones", 10)) continue;
         }
     }
 
