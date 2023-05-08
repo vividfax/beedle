@@ -55,6 +55,8 @@ class Adventurer {
 
         this.headingHome = false;
         this.headingTo = 0;
+
+        this.carryingBeetle = false;
     }
 
     update() {
@@ -78,6 +80,13 @@ class Adventurer {
         //     }
         // }
         if (this.checkProximity(player.x, player.y, this.radius/2 + player.radius/2)) {
+
+            if (this.carryingBeetle && score > 50) {
+                this.carryingBeetle = false;
+                wildBeetleCount--;
+                beetleScoreCount++;
+                score -= 50;
+            }
 
             if (this.isRare && this.isCarrying) {
                 this.isCarrying = false;
@@ -120,6 +129,11 @@ class Adventurer {
                         this.inventory[key.toString()] = 0;
                     }
                 }
+
+                if (this.carryingBeetle) {
+                    this.carryingBeetle = false;
+                    wildBeetleCount--;
+                }
             }
         }
 
@@ -156,6 +170,11 @@ class Adventurer {
 
             this.harvest();
             this.collect();
+
+            if (!this.carryingBeetle && wildBeetleCount < 1 && score > 50 && random() < 0.0001) {
+                this.carryingBeetle = true;
+                wildBeetleCount++;
+            }
         }
 
         this.hover();
@@ -302,6 +321,11 @@ class Adventurer {
                 loots.push(new Loot(this.x+random(-offset, offset), this.y+random(-offset, offset), key.toString()));
             }
         }
+
+        if (this.carryingBeetle) {
+            this.carryingBeetle = false;
+            wildBeetleCount--;
+        }
     }
 
     getClosestTown() {
@@ -333,16 +357,11 @@ class Adventurer {
 
         push();
 
-        stroke("#fff");
-
-        if (this.isRare && this.isCarrying) {
-            fill("#FFE600");
-        } else if (this.isCarrying) {
-            fill("#BF4A4A");
-        } else {
-            fill("#aaa");
+        if (this.carryingBeetle) {
+            strokeWeight(4);
+            stroke("#FFE600");
+            ellipse(this.x, this.y, this.radius+4);
         }
-        ellipse(this.x, this.y, this.radius);
 
         image(adventurerImages[this.number], this.x, this.y, this.radius, this.radius);
 

@@ -25,6 +25,9 @@ let coinImage;
 
 let popupSelected;
 
+let wildBeetleCount = 0;
+let beetleScoreCount = 0;
+
 function preload() {
 
     lootImages.stone = loadImage("./images/Stone.png");
@@ -37,6 +40,7 @@ function preload() {
     }
 
     coinImage = loadImage("./images/Coin.png");
+    beetleImage = loadImage("./images/beetle.png");
 }
 
 function setup() {
@@ -156,7 +160,7 @@ function display() {
     player.display();
 
     image(mapCutoutLayer, width/2, height/2);
-    displayCoinCount();
+    displayInventory();
     displayPopup();
 }
 
@@ -286,7 +290,7 @@ function createMapCutout() {
     mapCutoutLayer.endShape(CLOSE);
 }
 
-function displayCoinCount() {
+function displayInventory() {
 
     push();
 
@@ -295,20 +299,24 @@ function displayCoinCount() {
     beginShape();
     vertex(0, 0);
     vertex(150, 0);
-    vertex(0, 200);
+    vertex(0, 250);
     endShape(CLOSE);
 
-    image(coinImage, 10, 10, 20, 20);
     fill(255);
     textAlign(LEFT);
     textSize(20);
-    text(score, 30, 10);
+
+    image(beetleImage, 10, 10, 25, 25);
+    text(beetleScoreCount, 30, 10);
+
+    image(coinImage, 10, 35, 20, 20);
+    text(score, 30, 35);
 
     let i = 1;
 
     for (let [key, value] of Object.entries(player.inventory)) {
-        image(lootImages[key.toString()], 10, 10 + 25*i, 20, 20);
-        text(value, 30, 10 + 25*i);
+        image(lootImages[key.toString()], 10, 35 + 25*i, 20, 20);
+        text(value, 30, 35 + 25*i);
         i++;
     }
 

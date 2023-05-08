@@ -90,15 +90,15 @@ class Town {
 
         noStroke();
 
-        if (this.waitingForResource) {
+        // if (this.waitingForResource) {
             fill("#fff")
-        } else {
-            fill("#aaa");
-        }
+        // } else {
+        //     fill("#aaa");
+        // }
         ellipse(this.x, this.y, this.radius);
 
         fill("#000");
-        text(this.name + "\n" + this.resource, this.x, this.y)
+        text(this.name, this.x, this.y)
 
         pop();
     }

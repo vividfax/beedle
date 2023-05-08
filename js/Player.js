@@ -53,7 +53,7 @@ class Player {
                         score++;
                         this.inventory[key.toString()]--;
 
-                        if (key.toString() == "gems") score+=2;
+                        if (key.toString() == "gems") score += 4;
                     }
                 }
             }
