@@ -79,32 +79,20 @@ class Adventurer {
         //         }
         //     }
         // }
-        if (this.checkProximity(player.x, player.y, this.radius/2 + player.radius/2)) {
 
-            if (this.carryingBeetle && score > 50) {
-                this.carryingBeetle = false;
-                wildBeetleCount--;
-                beetleScoreCount++;
-                score -= 50;
-            }
-
-            if (this.isRare && this.isCarrying) {
-                this.isCarrying = false;
-                this.isRare = false;
-                rareCount--;
-                player.isCarryingRare = true;
-                player.rareCount++;
-
-            } else if (this.isCarrying) {
-                player.velocity = 0.1;
-                this.isCarrying = false;
-                player.isCarryingRare = false;
-                player.rareCount = 0;
-
-                // player.addToinventory();
-                // player.addToinventory();
+        if (this.carryingBeetle && score > 50) {
+            for (let i = 0; i < beedles.length; i++) {
+                if (this.checkProximity(beedles[i].x, beedles[i].y, this.radius/2 + player.radius/2)) {
+                    this.carryingBeetle = false;
+                    wildBeetleCount--;
+                    beetleScoreCount++;
+                    score -= 50;
+                    beedles.push(new Beedle(beedles[i].x, beedles[i].y));
+                    break;
+                }
             }
         }
+
         this.passingThroughTown = false;
 
         for (let i = 0; i < towns.length; i++) {

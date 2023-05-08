@@ -26,45 +26,45 @@ class Player {
 
     update() {
 
-        this.moved = false;
+        // this.moved = false;
 
-        if (this.velocity < 1) {
-            this.velocity += 0.002;
-        }
-        for (let i = 0; i < towns.length; i++) {
-            if (this.checkProximity(towns[i].x, towns[i].y, this.radius/2 + towns[i].radius/2)) {
+        // if (this.velocity < 1) {
+        //     this.velocity += 0.002;
+        // }
+        // for (let i = 0; i < towns.length; i++) {
+        //     if (this.checkProximity(towns[i].x, towns[i].y, this.radius/2 + towns[i].radius/2)) {
 
-                if (this.isCarryingRare) {
-                    score += 20 * this.rareCount;
-                    this.rareCount = 0;
-                    this.isCarryingRare = false;
-                }
-                this.velocity = 1;
+        //         if (this.isCarryingRare) {
+        //             score += 20 * this.rareCount;
+        //             this.rareCount = 0;
+        //             this.isCarryingRare = false;
+        //         }
+        //         this.velocity = 1;
 
-                // if (this.inventory[towns[i].resource] > 0) {
-                //     score += this.inventory[towns[i].resource];
-                //     this.inventory[towns[i].resource] = 0;
-                // }
+        //         // if (this.inventory[towns[i].resource] > 0) {
+        //         //     score += this.inventory[towns[i].resource];
+        //         //     this.inventory[towns[i].resource] = 0;
+        //         // }
 
-                for (let [key, value] of Object.entries(this.inventory)) {
-                    if (value > 0 && (towns[i].inventory[key.toString()] < 100 || key.toString() == "gems")) {
+        //         for (let [key, value] of Object.entries(this.inventory)) {
+        //             if (value > 0 && (towns[i].inventory[key.toString()] < 100 || key.toString() == "gems")) {
 
-                        towns[i].inventory[key.toString()] ++;
-                        score++;
-                        this.inventory[key.toString()]--;
+        //                 towns[i].inventory[key.toString()] ++;
+        //                 score++;
+        //                 this.inventory[key.toString()]--;
 
-                        if (key.toString() == "gems") score += 4;
-                    }
-                }
-            }
-        }
-        for (let i = 0; i < loots.length; i++) {
-            if (this.checkProximity(loots[i].x, loots[i].y, this.radius/2 + loots[i].radius)) {
+        //                 if (key.toString() == "gems") score += 4;
+        //             }
+        //         }
+        //     }
+        // }
+        // for (let i = 0; i < loots.length; i++) {
+        //     if (this.checkProximity(loots[i].x, loots[i].y, this.radius/2 + loots[i].radius)) {
 
-                this.addToinventory(loots[i].type);
-                loots[i].destruct();
-            }
-        }
+        //         this.addToinventory(loots[i].type);
+        //         loots[i].destruct();
+        //     }
+        // }
     }
 
     move(vector) {
@@ -130,7 +130,6 @@ class Player {
         if (dist(collider.x, collider.y, this.x, this.y) < this.radius/2 + collider.radius/2) return true;
     }
 
-
     checkProximity(x, y, distance) {
 
         if (dist(x, y, this.x, this.y) < distance) {
@@ -138,39 +137,5 @@ class Player {
         } else {
             return false;
         }
-    }
-
-    display() {
-
-        if (this.moved) {
-            // let pixel = pg.get(this.x, this.y);
-            // pixel[0] -= 5;
-            // pixel[1] -= 5;
-            // pixel[2] -= 5;
-            // pg.set(this.x, this.y, color(pixel));
-            // pg.updatePixels();
-        }
-
-        push();
-
-        // pg.noStroke();
-        // pg.fill(255, 255, 255, 10);
-        // pg.ellipse(this.x, this.y, 10);
-
-        //image(img, this.x, this.y, 750 * 0.1, 650 * 0.1);
-
-        if (this.isCarryingRare) {
-            stroke("#333")
-            fill("#FFE600");
-        } else {
-            strokeWeight(2);
-            stroke("#333");
-            fill("#fff");
-        }
-
-        // ellipse(this.x, this.y, this.radius);
-        image(playerImage, this.x, this.y, 750 * 0.1, 650 * 0.1);
-
-        pop();
     }
 }

@@ -29,6 +29,8 @@ let popupSelected;
 let wildBeetleCount = 0;
 let beetleScoreCount = 0;
 
+let beedles = [];
+
 function preload() {
 
     lootImages.stone = loadImage("./images/Stone.png");
@@ -55,6 +57,10 @@ function setup() {
     canvas.addEventListener('contextmenu', event => event.preventDefault());
 
     player = new Player(width/2, height/2);
+
+    for (let i = 0; i < 1; i++) {
+        beedles.push(new Beedle(width/2, height/2));
+    }
 
     for (let i = 0; i < 3; i++) {
         towns.push(new Town(i));
@@ -87,14 +93,14 @@ function update() {
 
     player.update();
 
-    if (targets.length > 0) {
+    // if (targets.length > 0) {
 
-        player.move(targets[0]);
+    //     player.move(targets[0]);
 
-        if (targets[0].collide(player)) {
-            targets.shift();
-        }
-    }
+    //     if (targets[0].collide(player)) {
+    //         targets.shift();
+    //     }
+    // }
 
     for (let i = 0; i < adventurers.length; i++) {
         adventurers[i].update();
@@ -125,6 +131,12 @@ function update() {
     for (let i = 0; i < forests.length; i++) {
         forests[i].update();
     }
+
+    for (let i = 0; i < beedles.length; i++) {
+        beedles[i].update();
+    }
+
+    moveBeedles();
 }
 
 function display() {
@@ -160,7 +172,9 @@ function display() {
         targets[i].display();
     }
 
-    player.display();
+    for (let i = 0; i < beedles.length; i++) {
+        beedles[i].display();
+    }
 
     image(mapCutoutLayer, width/2, height/2);
     displayInventory();
@@ -169,11 +183,15 @@ function display() {
 
 function mousePressed() {
 
-    let edgePadding = 100;
+    let edgePadding = 70;
 
     if (mouseX > width-edgePadding || mouseX < edgePadding || mouseY > height-edgePadding || mouseY < edgePadding) return;
 
     if (keyIsDown(SHIFT) || mouseButton != LEFT) {
+
+        for (let i = 0; i < beedles.length; i++) {
+            beedles[i].targets = [];
+        }
         targets = [(new Target(mouseX, mouseY))];
     } else {
         targets.push(new Target(mouseX, mouseY));
@@ -357,4 +375,49 @@ function displayInventory() {
     }
 
     pop();
+}
+
+function moveBeedles() {
+
+    for (let i = 0; i < targets.length; i++) {
+        for (let j = 0; j < beedles.length; j++) {
+
+            if (dist(targets[i].x, targets[i].y, beedles[j].x, beedles[j].y) < 1) {
+                targets.splice(i, 1);
+                i--;
+                if (i < 0) return;
+                continue;
+            }
+        }
+    }
+
+    for (let i = 0; i < targets.length; i++) {
+        if (targets[i].assigned) continue;
+
+        let closestBeedleIndex = -1;
+        let closestDistance = -1;
+
+        for (let j = 0; j < beedles.length; j++) {
+
+            let distance = 0;
+            let beedlePosition = [beedles[j].x, beedles[j].y];
+
+            for (let k = 0; k < beedles[j].targets.length; k++) {
+                distance += dist(beedlePosition[0], beedlePosition[1], beedles[j].targets[k].x,  beedles[j].targets[k].y);
+                beedlePosition = [beedles[j].targets[k].x,  beedles[j].targets[k].y];
+            }
+
+            distance += dist(beedlePosition[0], beedlePosition[1], targets[i].x, targets[i].y);
+
+            if (closestBeedleIndex == -1 || distance < closestDistance) {
+                closestBeedleIndex = j;
+                closestDistance = distance;
+            }
+        }
+
+        if (closestBeedleIndex == -1) break;
+
+        beedles[closestBeedleIndex].targets.push(targets[i]);
+        targets[i].assigned = true;
+    }
 }
