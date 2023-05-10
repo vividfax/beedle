@@ -17,7 +17,7 @@ class Adventurer {
             this.y = this.checkpoint.y;
         } else {
             this.edgePadding = 100;
-            this.x = random(this.edgePadding, width-this.edgePadding);
+            this.x = random(this.edgePadding+inventoryWidth, width-this.edgePadding);
             this.y = random(this.edgePadding, height-this.edgePadding);
         }
 
@@ -85,6 +85,7 @@ class Adventurer {
                 if (this.checkProximity(beedles[i].x, beedles[i].y, this.radius/2 + player.radius/2)) {
                     this.carryingBeetle = false;
                     wildBeetleCount--;
+                    compendium.unlockBeetle();
                     beetleScoreCount++;
                     score -= 50;
                     beedles.push(new Beedle(beedles[i].x, beedles[i].y));
@@ -159,7 +160,7 @@ class Adventurer {
             this.harvest();
             this.collect();
 
-            if (!this.carryingBeetle && wildBeetleCount < 1 && score > 50 && random() < 0.0001) {
+            if (!this.carryingBeetle && wildBeetleCount < 1 && beetleUnlocked && score > 50 && random() < 0.0001) {
                 this.carryingBeetle = true;
                 wildBeetleCount++;
             }
@@ -205,7 +206,7 @@ class Adventurer {
 
         let edgePadding = 100;
 
-        if ((this.x > width-edgePadding && this.velocityX > 0) || (this.x < edgePadding && this.velocityX < 0)) {
+        if ((this.x > width-edgePadding && this.velocityX > 0) || (this.x < edgePadding+inventoryWidth && this.velocityX < 0)) {
             this.velocityX *= -1;
         }
         if ((this.y > height-edgePadding && this.velocityY > 0) || (this.y < edgePadding && this.velocityY < 0)) {

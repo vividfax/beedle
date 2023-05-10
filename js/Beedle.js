@@ -42,6 +42,7 @@ class Beedle {
                         towns[i].inventory[key.toString()] ++;
                         score++;
                         player.inventory[key.toString()]--;
+                        player.lifetimeDelivery[key.toString()]++;
 
                         if (key.toString() == "gems") score += 4;
                     }

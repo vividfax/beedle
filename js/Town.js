@@ -7,12 +7,12 @@ class Town {
 
         this.townNumber = townNumber;
 
-        this.edgePadding = 100;
-        this.x = random(this.edgePadding, width-this.edgePadding);
+        this.edgePadding = 200;
+        this.x = random(this.edgePadding+inventoryWidth, width-this.edgePadding);
         this.y = random(this.edgePadding, height-this.edgePadding);
 
         while (this.touchingAnotherTown()) {
-            this.x = random(this.edgePadding, width-this.edgePadding);
+            this.x = random(this.edgePadding+inventoryWidth, width-this.edgePadding);
             this.y = random(this.edgePadding, height-this.edgePadding);
         }
 
@@ -62,7 +62,7 @@ class Town {
 
         for (let i = 0; i < towns.length; i++) {
 
-            if (dist(this.x, this.y, towns[i].x, towns[i].y) < 300) return true;
+            if (dist(this.x, this.y, towns[i].x, towns[i].y) < 200) return true;
         }
     }
 

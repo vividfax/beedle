@@ -22,6 +22,13 @@ class Player {
             bones: 0,
             gems: 0,
         };
+
+        this.lifetimeDelivery = {
+            stone: 0,
+            wood: 0,
+            bones: 0,
+            gems: 0,
+        }
     }
 
     update() {
