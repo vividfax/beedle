@@ -9,7 +9,7 @@ let questDescriptions = [
     "Amass coins\n$/250",
     "Amass gems\n$/10",
     "Amass coins\n$/1000",
-    "Amass coins\n$/5000",
+    "Amass coins\n$/2500",
 ];
 
 class BeetleGen {
@@ -80,7 +80,7 @@ class BeetleGen {
         } else if (this.index == 6) {
             if (score >= 1000) this.unlocked = true;
         } else if (this.index == 7) {
-            if (score >= 5000) this.unlocked = true;
+            if (score >= 2500) this.unlocked = true;
         }
 
         if (this.unlocked && !this.caught && !beetleUnlocked) beetleUnlocked = true;
