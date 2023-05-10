@@ -16,8 +16,8 @@ let scoreTextSize = 0;
 let pg;
 let mapCutoutLayer;
 
-let worldWidth = 1512;
-let worldHeight = 982;
+let worldWidth = 2560/2;
+let worldHeight = 1406/2;
 
 let lootImages = {};
 let adventurerImages = [];
@@ -234,17 +234,29 @@ function createBackground() {
     let w = width * multiplier;
     let h = height * multiplier;
 
-    pg = createGraphics(w, h);
+    pg = createGraphics(w/2, h/2);
+    pg.fill(255, 0,0);
+    pg.loadPixels();
 
-    for (let i = 0; i < w; i++) {
-        for (let j = 0; j < h; j++) {
+    let fuzz = 2;
 
-            let col;
+    for (let x = 0; x < w; x++) {
+        for (let y = 0; y < h; y++) {
+            let index = (w*y + x) * 4;
+            let col = color(112);
 
-            if (random() < 0.1 || (i < 200*multiplier && random(0.2/multiplier) < 1/(i)) || (j < 200*multiplier && random(0.2/multiplier) < 1/(j)) || (i > w-200*multiplier && random(0.2/multiplier) < 1/(w-i)) || (j > h-200*multiplier && random(0.2/multiplier) < 1/(h-j))) {
-                col = color(112);
+            if (random() < 0.1 || (x < 200*multiplier && random(0.2/multiplier) < 1/(x)) || (y < 200*multiplier && random(0.2/multiplier) < 1/(y)) || (x > w-200*multiplier && random(0.2/multiplier) < 1/(w-x)) || (y > h-200*multiplier && random(0.2/multiplier) < 1/(h-y))) {
+                //
+            } else if (x+int(random(-fuzz, fuzz)) > int(width/3-20)-fuzz && x+int(random(-fuzz, fuzz)) < int(width/3-20)+fuzz) {
+                //
+            } else if (x+int(random(-fuzz, fuzz)) > int(width/3*2+20)-fuzz && x+int(random(-fuzz, fuzz)) < int(width/3*2+20)+fuzz) {
+                //
+            } else if (y+int(random(-fuzz, fuzz)) > int(height/3-20)-fuzz && y+int(random(-fuzz, fuzz)) < int(height/3-20)+fuzz) {
+                //
+            } else if (y+int(random(-fuzz, fuzz)) > int(height/3*2+20)-fuzz && y+int(random(-fuzz, fuzz)) < int(height/3*2+20)+fuzz) {
+                //
             } else {
-                let perlin = noise(i*0.004/multiplier, j*0.004/multiplier)
+                let perlin = noise(x*0.005/multiplier, y*0.005/multiplier);
 
                 if (perlin < 0.3) {
                     col = lerpColor(color(0, 0, 150), color(0, 150, 150), perlin);
@@ -257,32 +269,35 @@ function createBackground() {
                 }
             }
 
-            pg.set(i, j, color(col));
+            pg.pixels[index] = red(col);
+            pg.pixels[index+1] = green(col);
+            pg.pixels[index+2] = blue(col);
+            pg.pixels[index+3] = 255;
         }
     }
+
     pg.updatePixels();
 
-    pg.stroke(112);
-    let offset = 10;
+    // pg.stroke(112);
+    // let offset = 10;
 
-    let topLeft = [width/3 + random(-offset, offset), height/3 + random(-offset, offset)]
-    let topRight = [width/3*2 + random(-offset, offset), height/3 + random(-offset, offset)]
-    let bottomLeft = [width/3 + random(-offset, offset), height/3*2 + random(-offset, offset)]
-    let bottomRight = [width/3*2 + random(-offset, offset), height/3*2 + random(-offset, offset)]
+    // let topLeft = [w/3 + random(-offset, offset), h/3 + random(-offset, offset)]
+    // let topRight = [w/3*2 + random(-offset, offset), h/3 + random(-offset, offset)]
+    // let bottomLeft = [w/3 + random(-offset, offset), h/3*2 + random(-offset, offset)]
+    // let bottomRight = [w/3*2 + random(-offset, offset), h/3*2 + random(-offset, offset)]
 
-    pg.line(0, height/3 + random(-offset, offset), topLeft[0], topLeft[1]);
-    pg.line(width, height/3 + random(-offset, offset), topRight[0], topRight[1]);
-    pg.line(0, height/3*2 + random(-offset, offset), bottomLeft[0], bottomLeft[1]);
-    pg.line(width, height/3*2 + random(-offset, offset), bottomRight[0], bottomRight[1]);
-    pg.line(width/3 + random(-offset, offset), 0, topLeft[0], topLeft[1]);
-    pg.line(width/3 + random(-offset, offset), height, bottomLeft[0], bottomLeft[1]);
-    pg.line(width/3*2 + random(-offset, offset), 0, topRight[0], topRight[1]);
-    pg.line(width/3*2 + random(-offset, offset), height, bottomRight[0], bottomRight[1]);
-    pg.line(topLeft[0], topLeft[1], topRight[0], topRight[1]);
-    pg.line(bottomLeft[0], bottomLeft[1], bottomRight[0], bottomRight[1]);
-    pg.line(topLeft[0], topLeft[1], bottomLeft[0], bottomLeft[1]);
-    pg.line(topRight[0], topRight[1], bottomRight[0], bottomRight[1]);
-
+    // pg.line(0, h/3 + random(-offset, offset), topLeft[0], topLeft[1]);
+    // pg.line(w, h/3 + random(-offset, offset), topRight[0], topRight[1]);
+    // pg.line(0, h/3*2 + random(-offset, offset), bottomLeft[0], bottomLeft[1]);
+    // pg.line(w, h/3*2 + random(-offset, offset), bottomRight[0], bottomRight[1]);
+    // pg.line(w/3 + random(-offset, offset), 0, topLeft[0], topLeft[1]);
+    // pg.line(w/3 + random(-offset, offset), h, bottomLeft[0], bottomLeft[1]);
+    // pg.line(w/3*2 + random(-offset, offset), 0, topRight[0], topRight[1]);
+    // pg.line(w/3*2 + random(-offset, offset), h, bottomRight[0], bottomRight[1]);
+    // pg.line(topLeft[0], topLeft[1], topRight[0], topRight[1]);
+    // pg.line(bottomLeft[0], bottomLeft[1], bottomRight[0], bottomRight[1]);
+    // pg.line(topLeft[0], topLeft[1], bottomLeft[0], bottomLeft[1]);
+    // pg.line(topRight[0], topRight[1], bottomRight[0], bottomRight[1]);
 
     pg.noStroke();
     pg.fill(173, 163, 126, 140);
@@ -295,7 +310,7 @@ function createTerrain() {
     for (let i = 0; i < width; i+=50) {
         for (let j = 0; j < height; j+=50) {
 
-            let perlin = noise(i*0.004, j*0.004)
+            let perlin = noise(i*0.005, j*0.005)
 
             if (perlin > 0.6) {
                 mountains.push(new Mountain(i, j));

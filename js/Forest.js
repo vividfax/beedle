@@ -2,7 +2,7 @@ class Forest {
 
     constructor(x, y) {
 
-        this.edgePadding = 200;
+        this.edgePadding = 100;
         this.x = x;
         this.y = y;
 

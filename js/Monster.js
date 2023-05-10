@@ -10,7 +10,7 @@ class Monster {
 
     init() {
 
-        this.edgePadding = 200;
+        this.edgePadding = 100;
         this.x = random(this.edgePadding, width-this.edgePadding);
         this.y = random(this.edgePadding, height-this.edgePadding);
 
@@ -20,7 +20,7 @@ class Monster {
             bigBadCount++;
         }
 
-        this.radius = this.bigBad ? 50 : 20;
+        this.radius = this.bigBad ? 40 : 15;
         this.speed = 0.8 - this.radius/100;
         this.velocityX = random(-this.speed, this.speed);
         this.velocityY = random(-this.speed, this.speed);

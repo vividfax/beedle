@@ -16,7 +16,7 @@ class Adventurer {
             this.x = this.checkpoint.x;
             this.y = this.checkpoint.y;
         } else {
-            this.edgePadding = 200;
+            this.edgePadding = 100;
             this.x = random(this.edgePadding, width-this.edgePadding);
             this.y = random(this.edgePadding, height-this.edgePadding);
         }
