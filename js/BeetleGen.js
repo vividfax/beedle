@@ -2,14 +2,14 @@ let beetlePatternSize = 150;
 let beetlePatternSet = ["circles", "circlePack", "stripesV", "stripesH", "circles", "circlePack", "circles", "stripesH"];
 
 let questDescriptions = [
-    "Amass coins\n$/50",
+    "Hoard coins\n$/50",
     "Sell wood\n$/500",
     "Sell stone\n$/350",
     "Sell bones\n$/50",
-    "Amass coins\n$/250",
-    "Amass gems\n$/10",
-    "Amass coins\n$/1000",
-    "Amass coins\n$/2500",
+    "Hoard coins\n$/250",
+    "Hoard gems\n$/10",
+    "Hoard coins\n$/1000",
+    "Hoard coins\n$/2500",
 ];
 
 class BeetleGen {

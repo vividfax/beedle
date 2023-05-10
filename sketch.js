@@ -27,6 +27,9 @@ let coinImage;
 let playerImage;
 
 let popupSelected;
+let popupBoxLayer;
+let popupBoxLayer2;
+let newPopupRequired;
 
 let wildBeetleCount = 0;
 let beetleScoreCount = 0;
@@ -35,6 +38,7 @@ let beedles = [];
 
 let compendium;
 let compendiumVisible = false;
+let needToCheckCompendium = false;
 
 let beetleDescriptionFont;
 
@@ -90,6 +94,8 @@ function setup() {
     createBackground();
     createTerrain();
     createMapCutout();
+
+    createPopupBox();
 
     for (let i = 0; i < 700; i++) draw();
 }
@@ -247,23 +253,85 @@ function keyPressed() {
     }
 }
 
+function createPopupBox() {
+
+    let w = 150;
+    let h = 100;
+    let interval = 20;
+    let bumpiness = 2;
+
+    popupBoxLayer = createGraphics(w, h);
+    popupBoxLayer.noStroke();
+    popupBoxLayer.fill("#928E74");
+    popupBoxLayer.beginShape();
+
+    popupBoxLayer2 = createGraphics(w, h);
+    popupBoxLayer2.noStroke();
+    popupBoxLayer2.fill(0, 50);
+    popupBoxLayer2.beginShape();
+
+    for (let i = bumpiness; i < w; i += interval) {
+        popupBoxLayer.vertex(i+random(-bumpiness, bumpiness), bumpiness+random(-bumpiness, bumpiness));
+    }
+
+    for (let i = bumpiness; i < h; i += interval) {
+        popupBoxLayer.vertex(w-bumpiness+random(-bumpiness, bumpiness), i+random(-bumpiness, bumpiness));
+    }
+
+    for (let i = bumpiness; i < w; i += interval) {
+        popupBoxLayer.vertex(w-i+random(-bumpiness, bumpiness), h-bumpiness+random(-bumpiness, bumpiness));
+    }
+
+    for (let i = bumpiness; i < h; i += interval) {
+        popupBoxLayer.vertex(bumpiness+random(-bumpiness, bumpiness), h-i+random(-bumpiness, bumpiness));
+    }
+
+    popupBoxLayer.endShape(CLOSE);
+    popupBoxLayer2.endShape(CLOSE);
+}
+
 function displayPopup() {
 
-    if (popupSelected == 0) return;
+    if (popupSelected == 0) {
+        if (!newPopupRequired) newPopupRequired = true;
+        return;
+    }
+
+    if (newPopupRequired) {
+        createPopupBox();
+        newPopupRequired = false;
+    }
 
     push();
     translate(popupSelected.x + 30, popupSelected.y);
-    textAlign(LEFT, TOP);
 
-    noStroke();
-    fill(255);
-    rect(0, 0, 50, 60);
-    fill(0);
+    translate(70, 30);
+    image(popupBoxLayer2, 7, 7);
+    image(popupBoxLayer, 0, 0);
+
+    translate(0, -25);
+    strokeWeight(0.3);
+    textFont(beetleDescriptionFont);
+    textSize(20);
+    textLeading(20);
 
     let i = 0;
-
     for (let [key, value] of Object.entries(popupSelected.inventory)) {
-        text(key.toString() + ":" + value, 0, 15*i);
+
+        let txt = key.toString() + ": " + value;
+        if (popupSelected instanceof Town) txt += "/100";
+        else if (popupSelected instanceof Adventurer && key.toString() != "gems") txt += "/10";
+        else if (popupSelected instanceof Adventurer && key.toString() == "gems") txt += "/5";
+
+        if (value > 100) {
+            stroke(150, 0, 0, 200);
+            fill(150, 0, 0, 200);
+        } else {
+            stroke(0, 200);
+            fill(0, 200);
+        }
+
+        text(txt, 0, 15*i);
         i++;
     }
 
@@ -396,7 +464,7 @@ function createMapCutout() {
 function displayInventory() {
 
     push();
-    translate(0, 5);
+    translate(10, 5);
 
     noStroke();
     fill("#333");
@@ -423,6 +491,11 @@ function displayInventory() {
         image(lootImages[key.toString()], 10, 35 + 25*i, 20, 20);
         text(value, 30, 35 + 25*i);
         i++;
+    }
+
+    if (needToCheckCompendium) {
+        textSize(20 + sin(frameCount*10));
+        text(">>>\nNew\nbeetle!\n>>>", 0, height/2);
     }
 
     pop();

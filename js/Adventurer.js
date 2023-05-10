@@ -1,6 +1,8 @@
 let maxRare = 2;
 let rareCount = 0;
 
+let maxResourceCarry = 8;
+
 class Adventurer {
 
     constructor(number) {
@@ -41,9 +43,9 @@ class Adventurer {
         this.fought = false;
 
         if (fresh) this.inventory = {
-            stone: int(random(10)),
-            wood: int(random(10)),
-            bones: int(random(10)),
+            stone: int(random(maxResourceCarry)),
+            wood: int(random(maxResourceCarry)),
+            bones: int(random(maxResourceCarry)),
             gems: int(random(5)),
         };
         else this.inventory = {
@@ -80,7 +82,7 @@ class Adventurer {
         //     }
         // }
 
-        if (this.carryingBeetle && score > 50) {
+        if (this.carryingBeetle && score >= 50) {
             for (let i = 0; i < beedles.length; i++) {
                 if (this.checkProximity(beedles[i].x, beedles[i].y, this.radius/2 + player.radius/2)) {
                     this.carryingBeetle = false;
@@ -160,7 +162,7 @@ class Adventurer {
             this.harvest();
             this.collect();
 
-            if (!this.carryingBeetle && wildBeetleCount < 1 && beetleUnlocked && score > 50 && random() < 0.0001) {
+            if (!this.carryingBeetle && wildBeetleCount < 1 && beetleUnlocked && score > 50 && random() < 0.001) {
                 this.carryingBeetle = true;
                 wildBeetleCount++;
             }
@@ -243,7 +245,7 @@ class Adventurer {
 
                 if (this.timeBetweenDrops > 200) {
 
-                    if (this.inventory.stone < 10) {
+                    if (this.inventory.stone < maxResourceCarry) {
                         this.inventory.stone++;
                     } else {
                         let radius = 10;
@@ -264,7 +266,7 @@ class Adventurer {
 
                 if (this.timeBetweenDrops > 200) {
 
-                    if (this.inventory.wood < 10) {
+                    if (this.inventory.wood < maxResourceCarry) {
                         this.inventory.wood++;
                     } else {
                         let radius = 10;
@@ -285,9 +287,9 @@ class Adventurer {
             if (!this.collide(loots[i])) continue;
 
             if (this.collectResource(i, this.inventory.gems, "gems", 5)) continue;
-            else if (this.collectResource(i, this.inventory.wood, "wood", 10)) continue;
-            else if (this.collectResource(i, this.inventory.stone, "stone", 10)) continue;
-            else if (this.collectResource(i, this.inventory.bones, "bones", 10)) continue;
+            else if (this.collectResource(i, this.inventory.wood, "wood", maxResourceCarry)) continue;
+            else if (this.collectResource(i, this.inventory.stone, "stone", maxResourceCarry)) continue;
+            else if (this.collectResource(i, this.inventory.bones, "bones", maxResourceCarry)) continue;
         }
     }
 

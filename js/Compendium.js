@@ -42,6 +42,8 @@ class Compendium {
 
     unlockBeetle() {
 
+        needToCheckCompendium = true;
+
         this.numberUnlocked++;
 
         if (this.numberUnlocked > this.genBeetles.length) return;
@@ -60,6 +62,8 @@ class Compendium {
     }
 
     display() {
+
+        if (needToCheckCompendium) needToCheckCompendium = false;
 
         for (let i = 0; i < this.genBeetles.length; i++) {
             this.genBeetles[i].display();
