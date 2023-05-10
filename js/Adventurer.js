@@ -89,7 +89,7 @@ class Adventurer {
                     wildBeetleCount--;
                     compendium.unlockBeetle();
                     beetleScoreCount++;
-                    score -= 50;
+                    buyingBeetleDebt += 50;
                     beedles.push(new Beedle(beedles[i].x, beedles[i].y));
                     break;
                 }
@@ -150,7 +150,7 @@ class Adventurer {
 
         if (!this.dead && !inFight) {
 
-            if (!this.headingHome && !this.passingThroughTown && this.inventory.gems >= 4) {
+            if (!this.headingHome && !this.passingThroughTown && this.inventory.gems >= 5) {
                 this.headingHome = true;
                 this.headingTo = this.getClosestTown();
             } else if (this.headingHome && this.passingThroughTown) {

@@ -97,8 +97,13 @@ class Town {
         // ellipse(this.x, this.y, this.radius);
         image(castleImage, this.x, this.y, this.radius, this.radius);
 
-        fill(255);
-        text(this.name, this.x, this.y)
+        fill(0, 200);
+        stroke(0, 200);
+        strokeWeight(0.3);
+        textFont(beetleDescriptionFont);
+        textSize(20);
+        textLeading(20);
+        text(this.name, this.x, this.y+40)
 
         pop();
     }

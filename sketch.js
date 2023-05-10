@@ -1,6 +1,3 @@
-let townsJson;
-let inventoryJson;
-
 let player;
 let targets = [];
 let towns = [];
@@ -11,7 +8,7 @@ let mountains = [];
 let forests = [];
 
 let score = 0;
-let scoreTextSize = 0;
+let buyingBeetleDebt = 0;
 
 let mapLayer;
 let mapCutoutLayer;
@@ -41,6 +38,7 @@ let compendiumVisible = false;
 let needToCheckCompendium = false;
 
 let beetleDescriptionFont;
+let cartoonFont;
 
 let beetleUnlocked = false;
 
@@ -61,6 +59,7 @@ function preload() {
     playerImage = loadImage("./images/beedle.png");
 
     beetleDescriptionFont = loadFont("./fonts/Allura-Regular.ttf");
+    cartoonFont = loadFont("./fonts/ConcertOne-Regular.ttf");
 }
 
 function setup() {
@@ -160,6 +159,11 @@ function update() {
     }
 
     moveBeedles();
+
+    if (buyingBeetleDebt > 0) {
+        buyingBeetleDebt--;
+        score--;
+    }
 
     compendium.update();
 }
@@ -304,6 +308,7 @@ function displayPopup() {
 
     push();
     translate(popupSelected.x + 30, popupSelected.y);
+    if (popupSelected instanceof Town) translate(15, -10);
 
     translate(70, 30);
     image(popupBoxLayer2, 7, 7);
@@ -466,20 +471,11 @@ function displayInventory() {
     push();
     translate(10, 5);
 
-    noStroke();
-    fill("#333");
-    beginShape();
-    vertex(0, 0);
-    vertex(150, 0);
-    vertex(0, 250);
-    endShape(CLOSE);
-
     textAlign(LEFT);
     textSize(20);
+    textFont(cartoonFont);
 
-    fill("#FFE600");
-    image(beetleImage, 10, 10, 25, 25);
-    text(beetleScoreCount, 30, 10);
+    translate(0, -25);
 
     fill(255);
     image(coinImage, 10, 35, 20, 20);
