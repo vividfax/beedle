@@ -8,8 +8,8 @@ let questDescriptions = [
     "Sell bones\n$/50",
     "Hoard coins\n$/250",
     "Hoard gems\n$/10",
-    "Hoard coins\n$/1000",
-    "Hoard coins\n$/2500",
+    "Hoard coins\n$/1500",
+    "Sell food\n$/450",
 ];
 
 class BeetleGen {
@@ -78,9 +78,9 @@ class BeetleGen {
         } else if (this.index == 5) {
             if (player.inventory.gems >= 10) this.unlocked = true;
         } else if (this.index == 6) {
-            if (score >= 1000) this.unlocked = true;
+            if (score >= 1500) this.unlocked = true;
         } else if (this.index == 7) {
-            if (score >= 2500) this.unlocked = true;
+            if (player.lifetimeDelivery.food >= 450) this.unlocked = true;
         }
 
         if (this.unlocked && !this.caught && !beetleUnlocked) beetleUnlocked = true;
@@ -123,7 +123,7 @@ class BeetleGen {
             } else if (this.index == 6) {
                 description = description.replace("$", score);
             } else if (this.index == 7) {
-                description = description.replace("$", score);
+                description = description.replace("$", player.lifetimeDelivery.food);
             }
 
             strokeWeight(0.5);

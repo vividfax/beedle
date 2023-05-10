@@ -28,6 +28,7 @@ class Town {
             stone: 0,
             wood: 0,
             bones: 0,
+            food: 0,
             gems: 0,
         };
     }

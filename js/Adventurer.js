@@ -35,7 +35,7 @@ class Adventurer {
         this.passingThroughTown = false;
 
         this.maxHitpoints = 60;
-        this.hitpoints = this.maxHitpoints;
+        this.hitpoints = random(this.maxHitpoints/2, this.maxHitpoints);
         this.dead = false;
 
         this.timeBetweenDrops = 0;
@@ -46,12 +46,14 @@ class Adventurer {
             stone: int(random(maxResourceCarry)),
             wood: int(random(maxResourceCarry)),
             bones: int(random(maxResourceCarry)),
+            food: int(random(maxResourceCarry)),
             gems: int(random(5)),
         };
         else this.inventory = {
             stone: 0,
             wood: 0,
             bones: 0,
+            food: 0,
             gems: 0,
         }
 
@@ -115,16 +117,20 @@ class Adventurer {
                 if (this.checkpoint != towns[i]) this.checkpoint = towns[i];
 
                 for (let [key, value] of Object.entries(this.inventory)) {
-                    if (value > 0) {
+                    if (value > 0 && key.toString() != "food") {
                         towns[i].inventory[key.toString()] += value;
                         this.inventory[key.toString()] = 0;
                     }
                 }
 
+                if (this.inventory.food < maxResourceCarry) this.inventory.food++;
+
                 if (this.carryingBeetle) {
                     this.carryingBeetle = false;
                     wildBeetleCount--;
                 }
+
+                if (this.hitpoints < this.maxHitpoints) this.hitpoints = this.maxHitpoints;
             }
         }
 
@@ -137,6 +143,13 @@ class Adventurer {
                 if (!inFight) inFight = true;
                 monsters[i].hitpoints--;
                 if (monsters[i].hitpoints <= 0) this.fought = true;
+                break;
+            }
+        }
+
+        for (let i = 0; i < animals.length; i++) {
+            if (this.collide(animals[i])) {
+                if (!inFight) inFight = true;
                 break;
             }
         }
@@ -157,10 +170,10 @@ class Adventurer {
                 this.headingHome = false;
             }
             this.move();
-            if (this.hitpoints < this.maxHitpoints) this.hitpoints += 0.5;
-
+            // if (this.hitpoints < this.maxHitpoints) this.hitpoints += 0.5;
             this.harvest();
             this.collect();
+            this.eat();
 
             if (!this.carryingBeetle && wildBeetleCount < 1 && beetleUnlocked && score > 50 && random() < 0.001) {
                 this.carryingBeetle = true;
@@ -290,6 +303,7 @@ class Adventurer {
             else if (this.collectResource(i, this.inventory.wood, "wood", maxResourceCarry)) continue;
             else if (this.collectResource(i, this.inventory.stone, "stone", maxResourceCarry)) continue;
             else if (this.collectResource(i, this.inventory.bones, "bones", maxResourceCarry)) continue;
+            else if (this.collectResource(i, this.inventory.food, "food", maxResourceCarry)) continue;
         }
     }
 
@@ -302,6 +316,15 @@ class Adventurer {
         }
     }
 
+    eat() {
+
+        if (this.hitpoints < this.maxHitpoints && this.inventory.food > 0) {
+            this.hitpoints += 3;
+            this.inventory.food--;
+            return true;
+        }
+    }
+
     dropAll() {
 
         let offset = 15;
@@ -309,6 +332,7 @@ class Adventurer {
 
         for (let [key, value] of Object.entries(this.inventory)) {
             for (let i = 0; i < value; i++) {
+                if (key.toString() == "food") continue;
                 loots.push(new Loot(this.x+random(-offset, offset), this.y+random(-offset, offset), key.toString()));
             }
         }

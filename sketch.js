@@ -6,6 +6,7 @@ let monsters = [];
 let loots = [];
 let mountains = [];
 let forests = [];
+let animals = [];
 
 let score = 0;
 let buyingBeetleDebt = 0;
@@ -48,6 +49,7 @@ function preload() {
     lootImages.wood = loadImage("./images/Wood.png");
     lootImages.bones = loadImage("./images/Skull.png");
     lootImages.gems = loadImage("./images/Crystal.png");
+    lootImages.food = loadImage("./images/Meat.png");
 
     for (let i = 0; i < 12; i++) {
         adventurerImages.push(loadImage("./images/hero" + i + ".png"));
@@ -86,6 +88,10 @@ function setup() {
 
     for (let i = 0; i < 17; i++) {
         monsters.push(new Monster());
+    }
+
+    for (let i = 0; i < 45; i++) {
+        animals.push(new Animal());
     }
 
     compendium = new Compendium();
@@ -130,6 +136,10 @@ function update() {
 
     for (let i = 0; i < monsters.length; i++) {
         monsters[i].update();
+    }
+
+    for (let i = 0; i < animals.length; i++) {
+        animals[i].update();
     }
 
     for (let i = 0; i < towns.length; i++) {
@@ -202,6 +212,10 @@ function display() {
 
     for (let i = 0; i < towns.length; i++) {
         towns[i].display()
+    }
+
+    for (let i = 0; i < animals.length; i++) {
+        animals[i].display();
     }
 
     for (let i = 0; i < monsters.length; i++) {
@@ -314,7 +328,7 @@ function displayPopup() {
     image(popupBoxLayer2, 7, 7);
     image(popupBoxLayer, 0, 0);
 
-    translate(0, -25);
+    translate(0, -33);
     strokeWeight(0.3);
     textFont(beetleDescriptionFont);
     textSize(20);
@@ -325,7 +339,7 @@ function displayPopup() {
 
         let txt = key.toString() + ": " + value;
         if (popupSelected instanceof Town) txt += "/100";
-        else if (popupSelected instanceof Adventurer && key.toString() != "gems") txt += "/10";
+        else if (popupSelected instanceof Adventurer && key.toString() != "gems") txt += "/8";
         else if (popupSelected instanceof Adventurer && key.toString() == "gems") txt += "/5";
 
         if (value > 100) {
@@ -484,7 +498,7 @@ function displayInventory() {
     let i = 1;
 
     for (let [key, value] of Object.entries(player.inventory)) {
-        image(lootImages[key.toString()], 10, 35 + 25*i, 20, 20);
+        image(lootImages[key.toString()], 10, 37 + 25*i, 20, 20);
         text(value, 30, 35 + 25*i);
         i++;
     }

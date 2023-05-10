@@ -20,6 +20,7 @@ class Player {
             stone: 0,
             wood: 0,
             bones: 0,
+            food: 0,
             gems: 0,
         };
 
@@ -27,6 +28,7 @@ class Player {
             stone: 0,
             wood: 0,
             bones: 0,
+            food: 0,
             gems: 0,
         }
     }
@@ -113,6 +115,7 @@ class Player {
         else if (lootType == "wood") this.inventory.wood++;
         else if (lootType == "bones") this.inventory.bones++;
         else if (lootType == "gems") this.inventory.gems++;
+        else if (lootType == "food") this.inventory.food++;
     }
 
     displayinventory() {

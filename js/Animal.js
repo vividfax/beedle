@@ -1,7 +1,4 @@
-let bigBadCount = 0;
-let bigBadMax = 3;
-
-class Monster {
+class Animal {
 
     constructor() {
 
@@ -14,18 +11,12 @@ class Monster {
         this.x = random(this.edgePadding+inventoryWidth, width-this.edgePadding);
         this.y = random(this.edgePadding, height-this.edgePadding);
 
-        this.bigBad = false;
-        if (bigBadCount < bigBadMax && random() < 0.3) {
-            this.bigBad = true;
-            bigBadCount++;
-        }
-
-        this.radius = this.bigBad ? 40 : 15;
-        this.speed = 0.8 - this.radius/100;
+        this.radius = 10;
+        this.speed = 0.2;
         this.velocityX = random(-this.speed, this.speed);
         this.velocityY = random(-this.speed, this.speed);
 
-        this.maxHitpoints = this.radius*2;
+        this.maxHitpoints = 50;
         this.hitpoints = this.maxHitpoints;
         this.dead = false;
     }
@@ -34,35 +25,46 @@ class Monster {
 
         if (this.dead) return;
 
+        for (let i = 0; i < towns.length; i++) {
+            if (this.collide(towns[i])) {
+                this.init();
+                return;
+            }
+        }
+
         let inFight = false;
 
         for (let i = 0; i < adventurers.length; i++) {
             if (this.collide(adventurers[i])) {
                 if (!inFight) inFight = true;
-                adventurers[i].hitpoints--;
+
+                this.hitpoints--;
 
                 if (this.hitpoints < 0) {
                     this.dead = true;
-                    loots.push(new Loot(this.x, this.y, "bones"));
-                    if (adventurers[i].inventory.gems < 5) adventurers[i].inventory.gems++;
-                    if (this.bigBad) bigBadCount--;
+                    loots.push(new Loot(this.x, this.y, "food"));
                     this.init();
                     return;
                 }
             }
         }
 
-        for (let i = 0; i < animals.length; i++) {
-            if (this.collide(animals[i])) {
+        for (let i = 0; i < monsters.length; i++) {
+            if (this.collide(monsters[i])) {
                 if (!inFight) inFight = true;
-                break;
+
+                this.hitpoints--;
+
+                if (this.hitpoints < 0) {
+                    this.dead = true;
+                    this.init();
+                    return;
+                }
             }
         }
 
         if (!inFight) {
             this.move();
-            this.eat();
-            // if (this.hitpoints < this.maxHitpoints) this.hitpoints += 0.1;
         }
     }
 
@@ -70,7 +72,7 @@ class Monster {
 
         let pos = createVector(this.x, this.y);
 
-        if (random() < 0.05) {
+        if (random() < 0.005) {
             this.velocityX = random(-this.speed, this.speed);
             this.velocityY = random(-this.speed, this.speed);
         } else if (random() < 0.001) {
@@ -93,20 +95,6 @@ class Monster {
         this.y = pos.y;
     }
 
-    eat() {
-
-        for (let i = loots.length-1; i >= 0; i--) {
-
-            if (!this.collide(loots[i])) continue;
-
-            if (loots[i].type == "food") {
-                this.hitpoints++;
-                loots[i].destruct();
-                return true;
-            }
-        }
-    }
-
     collide(collider) {
 
         if (collider.dead) return false;
@@ -120,8 +108,8 @@ class Monster {
 
         push();
 
-        stroke(0);
-        fill(50);
+        noStroke();
+        fill(200, 100);
         ellipse(this.x, this.y, this.radius);
 
         pop();
