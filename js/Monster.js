@@ -11,7 +11,7 @@ class Monster {
     init() {
 
         this.edgePadding = 100;
-        this.x = random(this.edgePadding+inventoryWidth, width-this.edgePadding);
+        this.x = random(this.edgePadding, width-this.edgePadding-inventoryWidth);
         this.y = random(this.edgePadding, height-this.edgePadding);
 
         this.bigBad = false;
@@ -82,7 +82,7 @@ class Monster {
 
         let edgePadding = 100;
 
-        if ((this.x > width-edgePadding && this.velocityX > 0) || (this.x < edgePadding+inventoryWidth && this.velocityX < 0)) {
+        if ((this.x > width-edgePadding-inventoryWidth && this.velocityX > 0) || (this.x < edgePadding && this.velocityX < 0)) {
             this.velocityX *= -1;
         }
         if ((this.y > height-edgePadding && this.velocityY > 0) || (this.y < edgePadding && this.velocityY < 0)) {

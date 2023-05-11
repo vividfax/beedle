@@ -187,8 +187,8 @@ function display() {
 
         push();
         scale(-1, 1);
-        image(compendiumPaperLayer, -(inventoryWidth/2 + width/2), height/2, width-inventoryWidth, height);
-        image(mapCutoutLayer, -(inventoryWidth/2 + width/2), height/2);
+        image(compendiumPaperLayer, -(-inventoryWidth/2 + width/2), height/2, width-inventoryWidth, height);
+        image(mapCutoutLayer, -(-inventoryWidth/2 + width/2), height/2);
         pop();
 
         compendium.display();
@@ -196,7 +196,7 @@ function display() {
         return;
     }
 
-    image(mapLayer, inventoryWidth/2 + width/2, height/2, width-inventoryWidth, height);
+    image(mapLayer, -inventoryWidth/2 + width/2, height/2, width-inventoryWidth, height);
 
     for (let i = 0; i < mountains.length; i++) {
         mountains[i].display();
@@ -234,7 +234,7 @@ function display() {
         beedles[i].display();
     }
 
-    image(mapCutoutLayer, inventoryWidth/2 + width/2, height/2);
+    image(mapCutoutLayer, -inventoryWidth/2 + width/2, height/2);
     displayPopup();
 }
 
@@ -432,9 +432,9 @@ function createTerrain() {
             let perlin = noise(i*0.005, j*0.005)
 
             if (perlin > 0.6) {
-                mountains.push(new Mountain(i+inventoryWidth, j));
+                mountains.push(new Mountain(i, j));
             } else if (perlin > 0.4 && perlin < 0.45) {
-                forests.push(new Forest(i+inventoryWidth, j));
+                forests.push(new Forest(i, j));
             }
         }
     }
@@ -483,7 +483,7 @@ function createMapCutout() {
 function displayInventory() {
 
     push();
-    translate(10, 5);
+    translate(width-inventoryWidth+10, 5);
 
     textAlign(LEFT);
     textSize(20);
@@ -505,7 +505,7 @@ function displayInventory() {
 
     if (needToCheckCompendium) {
         textSize(20 + sin(frameCount*10));
-        text(">>>\nNew\nbeetle!\n>>>", 0, height/2);
+        text("<<<\nNew\nbeetle!\n<<<", 0, height/2);
     }
 
     pop();

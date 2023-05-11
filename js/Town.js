@@ -8,11 +8,11 @@ class Town {
         this.townNumber = townNumber;
 
         this.edgePadding = 200;
-        this.x = random(this.edgePadding+inventoryWidth, width-this.edgePadding);
+        this.x = random(this.edgePadding, width-this.edgePadding-inventoryWidth);
         this.y = random(this.edgePadding, height-this.edgePadding);
 
         while (this.touchingAnotherTown()) {
-            this.x = random(this.edgePadding+inventoryWidth, width-this.edgePadding);
+            this.x = random(this.edgePadding, width-this.edgePadding-inventoryWidth);
             this.y = random(this.edgePadding, height-this.edgePadding);
         }
 

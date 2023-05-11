@@ -16,7 +16,7 @@ class Compendium {
         for (let i = 0; i < 8; i++) {
 
             let beetleSize = random(150, 360);
-            let x = width/2+inventoryWidth/2 + column*spacingX - rowsAndColumns[row]/2*spacingX + spacingX/2 + random(-offset, offset);
+            let x = width/2-inventoryWidth/2 + column*spacingX - rowsAndColumns[row]/2*spacingX + spacingX/2 + random(-offset, offset);
             let y = height/2 + row*spacingY - rowsAndColumns.length/2*spacingY + spacingY/2 + random(-offset, offset);
 
             this.genBeetles.push(new BeetleGen(x, y, beetleSize, i));
