@@ -148,15 +148,6 @@ function update() {
 
     player.update();
 
-    // if (targets.length > 0) {
-
-    //     player.move(targets[0]);
-
-    //     if (targets[0].collide(player)) {
-    //         targets.shift();
-    //     }
-    // }
-
     for (let i = 0; i < adventurers.length; i++) {
         adventurers[i].update();
     }
@@ -297,9 +288,13 @@ function mousePressed() {
     if (keyIsDown(SHIFT) || mouseButton != LEFT) {
 
         for (let i = 0; i < beedles.length; i++) {
+            for (let j = 0; j < beedles[i].targets.length; j++) {
+                beedles[i].targets[j].assigned = false;
+            }
             beedles[i].targets = [];
         }
-        targets = [(new Target(mouseX/size, mouseY/size))];
+        targets.unshift(new Target(mouseX/size, mouseY/size));
+
     } else {
         targets.push(new Target(mouseX/size, mouseY/size));
     }
@@ -633,7 +628,6 @@ function displayFog() {
 
     for (let i = 0; i < fogCircles.length; i++) {
 
-        // let drawFog = true;
         let fogAlpha = 60;
 
         for (let j = 0; j < beedles.length; j++) {
@@ -647,47 +641,17 @@ function displayFog() {
             }
         }
 
-        // if (drawFog) {
-            fogLayer.fill(148, 142, 119, fogAlpha);
-            fogLayer.ellipse(fogCircles[i].x, fogCircles[i].y, fogCircles[i].radius+sin(frameCount+fogCircles[i].breatheOffset)*5);
-        // }
+        fogLayer.fill(148, 142, 119, fogAlpha);
+        fogLayer.ellipse(fogCircles[i].x, fogCircles[i].y, fogCircles[i].radius+sin(frameCount+fogCircles[i].breatheOffset)*5);
     }
+}
 
-////
+function reassignWaypoints() {
 
-    // let w = width/size-inventoryWidth;
-    // let h = height/size;
-
-    // fill(255);
-    // noStroke();
-
-    // beginShape();
-
-
-    // for (let i = 0; i < beedles.length; i++) {
-
-    //         vertex(0, h);
-    //         vertex(w, h);
-    //         vertex(w, 0);
-    //         vertex(0, 0);
-    //     beginContour();
-
-    //     let steps = 360;
-    //     let radius = 100;
-    //     let x = beedles[i].x;
-    //     let y = beedles[i].y;
-
-    //     for (let i = 0; i < steps+1; i++) {
-
-    //         angleMode(RADIANS);
-    //         let vX = (x + radius * cos(2 * PI * i / steps));
-    //         let vY = (y + radius * sin(2 * PI * i / steps));
-
-    //         vertex(vX, vY);
-    //     }
-    //     endContour();
-    // }
-
-
-    // endShape(CLOSE);
+    for (let i = 0; i < beedles.length; i++) {
+        for (let j = 0; j < beedles[i].targets.length; j++) {
+            beedles[i].targets[j].assigned = false;
+        }
+        beedles[i].targets = [];
+    }
 }

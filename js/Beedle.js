@@ -15,7 +15,6 @@ class Beedle {
 
     update() {
 
-
         this.moved = false;
 
         if (this.velocity < 1) {

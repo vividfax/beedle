@@ -94,6 +94,7 @@ class Adventurer {
                     beetleScoreCount++;
                     buyingBeetleDebt += 50;
                     beedles.push(new Beedle(beedles[i].x, beedles[i].y));
+                    reassignWaypoints();
                     if (adventurers.length < 12) adventurers.push(new Adventurer(adventurers.length));
                     break;
                 }
@@ -178,10 +179,31 @@ class Adventurer {
             this.collect();
             this.eat();
 
-            if (!this.carryingBeetle && wildBeetleCount < 1 && beetleUnlocked && score > 50 && random() < 0.001) {
-                this.carryingBeetle = true;
-                wildBeetleCount++;
-                shouts.push(new Shout(0, 0, this));
+            if (!this.carryingBeetle && !this.headingHome && wildBeetleCount < 1 && beetleUnlocked && score > 50 && random() < 0.1) {
+
+                let tooCloseToTownOrPlayer = false;
+
+                for (let i = 0; i < towns.length; i++) {
+                    let distance = dist(towns[i].x, towns[i].y, this.x, this.y);
+                    if (distance < 200) {
+                        tooCloseToTownOrPlayer = true;
+                        break;
+                    }
+                }
+
+                for (let i = 0; i < beedles.length; i++) {
+                    let distance = dist(beedles[i].x, beedles[i].y, this.x, this.y);
+                    if (distance < 100) {
+                        tooCloseToTownOrPlayer = true;
+                        break;
+                    }
+                }
+
+                if (!tooCloseToTownOrPlayer) {
+                    this.carryingBeetle = true;
+                    wildBeetleCount++;
+                    shouts.push(new Shout(0, 0, this));
+                }
             }
         }
 
