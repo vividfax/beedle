@@ -4,12 +4,12 @@ let beetlePatternSet = ["circles", "circlePack", "stripesV", "stripesH", "circle
 let questDescriptions = [
     "Hoard coins\n$/50",
     "Sell wood\n$/500",
-    "Sell stone\n$/350",
+    "Sell stone\n$/200",
     "Sell bones\n$/50",
     "Hoard coins\n$/250",
     "Hoard gems\n$/10",
     "Hoard coins\n$/1500",
-    "Sell food\n$/450",
+    "Sell food\n$/150",
 ];
 
 class BeetleGen {
@@ -70,7 +70,7 @@ class BeetleGen {
         } else if (this.index == 1) {
             if (player.lifetimeDelivery.wood >= 500) this.unlocked = true;
         } else if (this.index == 2) {
-            if (player.lifetimeDelivery.stone >= 350) this.unlocked = true;
+            if (player.lifetimeDelivery.stone >= 200) this.unlocked = true;
         } else if (this.index == 3) {
             if (player.lifetimeDelivery.bones >= 50) this.unlocked = true;
         } else if (this.index == 4) {
@@ -80,7 +80,7 @@ class BeetleGen {
         } else if (this.index == 6) {
             if (score >= 1500) this.unlocked = true;
         } else if (this.index == 7) {
-            if (player.lifetimeDelivery.food >= 450) this.unlocked = true;
+            if (player.lifetimeDelivery.food >= 150) this.unlocked = true;
         }
 
         if (this.unlocked && !this.caught && !beetleUnlocked) beetleUnlocked = true;
