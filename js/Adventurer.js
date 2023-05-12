@@ -158,6 +158,7 @@ class Adventurer {
 
         if (this.hitpoints < 0) {
             this.dead = true;
+            shouts.push(new Shout(this.x, this.y, -1));
             this.dropAll();
             this.init(false);
             return;
@@ -180,6 +181,7 @@ class Adventurer {
             if (!this.carryingBeetle && wildBeetleCount < 1 && beetleUnlocked && score > 50 && random() < 0.001) {
                 this.carryingBeetle = true;
                 wildBeetleCount++;
+                shouts.push(new Shout(0, 0, this));
             }
         }
 

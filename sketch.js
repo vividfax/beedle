@@ -7,6 +7,7 @@ let loots = [];
 let mountains = [];
 let forests = [];
 let animals = [];
+let shouts = [];
 
 let score = 0;
 let buyingBeetleDebt = 0;
@@ -27,6 +28,8 @@ let lootImages = {};
 let adventurerImages = [];
 let coinImage;
 let playerImage;
+let deathShoutImage;
+let beetleShoutImage;
 
 let popupSelected;
 let popupBoxLayer;
@@ -67,6 +70,8 @@ function preload() {
     beetleImage = loadImage("./images/beetle.png");
     castleImage = loadImage("./images/castle.png");
     playerImage = loadImage("./images/beedle.png");
+    deathShoutImage = loadImage("./images/death-shout.png")
+    beetleShoutImage = loadImage("./images/beetle-shout.png")
 
     beetleDescriptionFont = loadFont("./fonts/Allura-Regular.ttf");
     cartoonFont = loadFont("./fonts/ConcertOne-Regular.ttf");
@@ -121,7 +126,6 @@ function setup() {
     createTerrain();
     createMapCutout();
     createFog();
-    aboveFogLayer = createGraphics(width/size-inventoryWidth, height/size);
 
     createPopupBox();
 
@@ -191,6 +195,10 @@ function update() {
         beedles[i].update();
     }
 
+    for (let i = 0; i < shouts.length; i++) {
+        shouts[i].update();
+    }
+
     moveBeedles();
 
     if (buyingBeetleDebt > 0) {
@@ -206,7 +214,6 @@ function display() {
     scale(size, size);
 
     clear();
-    aboveFogLayer.clear();
 
     if (compendiumVisible) {
 
@@ -252,6 +259,13 @@ function display() {
         adventurers[i].display();
     }
 
+    displayFog();
+    image(fogLayer, -inventoryWidth/2 + width/size/2, height/size/2);
+
+    for (let i = 0; i < shouts.length; i++) {
+        shouts[i].display();
+    }
+
     for (let i = 0; i < targets.length; i++) {
         targets[i].display();
     }
@@ -259,10 +273,6 @@ function display() {
     for (let i = 0; i < beedles.length; i++) {
         beedles[i].display();
     }
-
-    displayFog();
-    image(fogLayer, -inventoryWidth/2 + width/size/2, height/size/2);
-    image(aboveFogLayer, -inventoryWidth/2 + width/size/2, height/size/2);
 
     image(mapCutoutLayer, -inventoryWidth/2 + width/size/2, height/size/2);
     displayInventory();

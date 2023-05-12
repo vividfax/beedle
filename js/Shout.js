@@ -1,0 +1,67 @@
+class Shout {
+
+    constructor (x, y, target) {
+
+        this.x = x;
+        this.y = y;
+        this.target = target;
+        this.radius = 20;
+
+        this.lifeTime = 0;
+        this.visible = false;
+    }
+
+    update() {
+
+        this.lifeTime++;
+
+        if (this.lifeTime > 60*30) this.destruct();
+        if (this.target != -1 && !this.target.carryingBeetle) this.destruct();
+
+        let x, y;
+
+        if (this.target == -1) {
+            x = this.x;
+            y = this.y;
+        } else {
+            x = this.target.x;
+            y = this.target.y;
+        }
+
+        for (let i = 0; i < beedles.length; i++) {
+
+            let distance = dist(beedles[i].x, beedles[i].y, x, y);
+            if (this.target == -1 && distance < beedleVisionRadius) {
+                this.destruct();
+                return;
+            } else if (this.target != -1 && distance < beedleVisionRadius) {
+                this.visible = true;
+            } else if (this.target != -1) {
+                this.visible = false;
+            }
+        }
+    }
+
+    destruct() {
+
+        let index = shouts.indexOf(this);
+        if (index != -1) shouts.splice(index, 1);
+    }
+
+    display() {
+
+        if (this.visible) return;
+
+        let x, y;
+
+        if (this.target == -1) {
+            x = this.x;
+            y = this.y;
+            image(deathShoutImage, x, y, this.radius, this.radius);
+        } else {
+            x = this.target.x;
+            y = this.target.y;
+            image(beetleShoutImage, x, y, this.radius, this.radius);
+        }
+    }
+}
