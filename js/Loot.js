@@ -8,8 +8,8 @@ class Loot {
             this.y = y;
         }
         else {
-            this.x = random(width);
-            this.y = random(height);
+            this.x = random(width/size);
+            this.y = random(height/size);
         }
 
         this.radius = 20;

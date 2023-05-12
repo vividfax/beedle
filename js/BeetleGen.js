@@ -381,11 +381,11 @@ class BeetleGen {
 
         let wingWidth = this.wingsVectors[1];
 
-        this.image.image(this.wingShape, -wingWidth/4, -height/2 + height/5*3, wingWidth+4, this.wingsVectors[0]+4);
-        this.image.image(wingPattern, -wingWidth/4, -height/2 + height/5*3, wingWidth-4, this.wingsVectors[0]);
+        this.image.image(this.wingShape, -wingWidth/4, -height/size/2 + height/size/5*3, wingWidth+4, this.wingsVectors[0]+4);
+        this.image.image(wingPattern, -wingWidth/4, -height/size/2 + height/size/5*3, wingWidth-4, this.wingsVectors[0]);
         this.image.scale(-1, 1);
-        this.image.image(this.wingShape, -(wingWidth/4), -height/2 + height/5*3, wingWidth+4, this.wingsVectors[0]+4);
-        this.image.image(wingPattern, -(wingWidth/4), -height/2 + height/5*3, wingWidth-4, this.wingsVectors[0]);
+        this.image.image(this.wingShape, -(wingWidth/4), -height/size/2 + height/size/5*3, wingWidth+4, this.wingsVectors[0]+4);
+        this.image.image(wingPattern, -(wingWidth/4), -height/size/2 + height/size/5*3, wingWidth-4, this.wingsVectors[0]);
     }
 }
 

@@ -8,12 +8,12 @@ class Town {
         this.townNumber = townNumber;
 
         this.edgePadding = 200;
-        this.x = random(this.edgePadding, width-this.edgePadding-inventoryWidth);
-        this.y = random(this.edgePadding, height-this.edgePadding);
+        this.x = random(this.edgePadding, width/size-this.edgePadding-inventoryWidth);
+        this.y = random(this.edgePadding, height/size-this.edgePadding);
 
         while (this.touchingAnotherTown()) {
-            this.x = random(this.edgePadding, width-this.edgePadding-inventoryWidth);
-            this.y = random(this.edgePadding, height-this.edgePadding);
+            this.x = random(this.edgePadding, width/size-this.edgePadding-inventoryWidth);
+            this.y = random(this.edgePadding, height/size-this.edgePadding);
         }
 
         this.name = townNames[townNumber];
@@ -81,7 +81,8 @@ class Town {
 
     hover() {
 
-        if(dist(mouseX, mouseY, this.x, this.y) < this.radius/2) popupSelected = this;
+        textAlign(CENTER, CENTER);
+        if(dist(mouseX/size, mouseY/size, this.x, this.y) < this.radius/2) popupSelected = this;
     }
 
     display() {

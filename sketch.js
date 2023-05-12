@@ -15,8 +15,8 @@ let mapLayer;
 let mapCutoutLayer;
 let compendiumPaperLayer;
 
-let screenWidth = 2560/2;
-let screenHeight = 1406/2;
+let screenWidth = 2560/2-10;
+let screenHeight = 1406/2-10;
 let inventoryWidth = 100;
 
 let lootImages = {};
@@ -43,6 +43,8 @@ let cartoonFont;
 
 let beetleUnlocked = false;
 
+let size;
+
 function preload() {
 
     lootImages.stone = loadImage("./images/Stone.png");
@@ -66,7 +68,20 @@ function preload() {
 
 function setup() {
 
-    createCanvas(screenWidth, screenHeight);
+    let sizeX = 1/screenWidth*(windowWidth-20);
+    let sizeY = 1/screenHeight*(windowHeight-20);
+    let x = sizeX < sizeY ? screenWidth*sizeX : screenWidth*sizeY;
+    let y = sizeX < sizeY ? screenHeight*sizeX : screenHeight*sizeY;
+    x = int(x);
+    y = int(y);
+
+    if (windowWidth < screenWidth || windowHeight < screenHeight) {
+        x = screenWidth;
+        y = screenHeight;
+    }
+
+    createCanvas(x, y);
+    size = 1/screenWidth*width;
     angleMode(DEGREES);
     imageMode(CENTER);
     textAlign(CENTER, CENTER);
@@ -180,6 +195,8 @@ function update() {
 
 function display() {
 
+    scale(size, size);
+
     clear();
     displayInventory();
 
@@ -187,8 +204,8 @@ function display() {
 
         push();
         scale(-1, 1);
-        image(compendiumPaperLayer, -(-inventoryWidth/2 + width/2), height/2, width-inventoryWidth, height);
-        image(mapCutoutLayer, -(-inventoryWidth/2 + width/2), height/2);
+        image(compendiumPaperLayer, -(-inventoryWidth/2 + width/size/2), height/size/2, width/size-inventoryWidth, height/size);
+        image(mapCutoutLayer, -(-inventoryWidth/2 + width/size/2), height/size/2);
         pop();
 
         compendium.display();
@@ -196,7 +213,7 @@ function display() {
         return;
     }
 
-    image(mapLayer, -inventoryWidth/2 + width/2, height/2, width-inventoryWidth, height);
+    image(mapLayer, -inventoryWidth/2 + width/size/2, height/size/2, width/size-inventoryWidth, height/size);
 
     for (let i = 0; i < mountains.length; i++) {
         mountains[i].display();
@@ -234,13 +251,13 @@ function display() {
         beedles[i].display();
     }
 
-    image(mapCutoutLayer, -inventoryWidth/2 + width/2, height/2);
+    image(mapCutoutLayer, -inventoryWidth/2 + width/size/2, height/size/2);
     displayPopup();
 }
 
 function hoverOverInventory() {
 
-    if (mouseX > 0 && mouseX < width-inventoryWidth && mouseY > 0 && mouseY < height) {
+    if (mouseX/size > 0 && mouseX/size < width/size-inventoryWidth && mouseY/size > 0 && mouseY/size < height/size) {
         compendiumVisible = false;
     } else {
         compendiumVisible = true;
@@ -251,16 +268,16 @@ function mousePressed() {
 
     let edgePadding = 30;
 
-    if (mouseX > width-edgePadding || mouseX < edgePadding+inventoryWidth || mouseY > height-edgePadding || mouseY < edgePadding) return;
+    if (mouseX > width/size-edgePadding || mouseX < edgePadding+inventoryWidth || mouseY > height-edgePadding || mouseY < edgePadding) return;
 
     if (keyIsDown(SHIFT) || mouseButton != LEFT) {
 
         for (let i = 0; i < beedles.length; i++) {
             beedles[i].targets = [];
         }
-        targets = [(new Target(mouseX, mouseY))];
+        targets = [(new Target(mouseX/size, mouseY/size))];
     } else {
-        targets.push(new Target(mouseX, mouseY));
+        targets.push(new Target(mouseX/size, mouseY/size));
     }
 }
 
@@ -361,8 +378,8 @@ function createBackground() {
 
     let multiplier = 1;
 
-    let mapWidth = width-inventoryWidth;
-    let mapHeight = height;
+    let mapWidth = width/size-inventoryWidth;
+    let mapHeight = height/size;
 
     let w = mapWidth * multiplier;
     let h = mapHeight * multiplier;
@@ -442,8 +459,8 @@ function createTerrain() {
 
 function createMapCutout() {
 
-    let w = width-inventoryWidth;
-    let h = height;
+    let w = width/size-inventoryWidth;
+    let h = height/size;
 
     mapCutoutLayer = createGraphics(w, h);
     mapCutoutLayer.noStroke();
@@ -483,7 +500,7 @@ function createMapCutout() {
 function displayInventory() {
 
     push();
-    translate(width-inventoryWidth+10, 5);
+    translate(width/size-inventoryWidth+10, 10);
 
     textAlign(LEFT);
     textSize(20);
@@ -505,7 +522,7 @@ function displayInventory() {
 
     if (needToCheckCompendium) {
         textSize(20 + sin(frameCount*10));
-        text("<<<\nNew\nbeetle!\n<<<", 0, height/2);
+        text("<<<\nNew\nbeetle!\n<<<", 0, height/size/2);
     }
 
     pop();

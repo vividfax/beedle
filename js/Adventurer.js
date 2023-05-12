@@ -18,9 +18,9 @@ class Adventurer {
             this.x = this.checkpoint.x;
             this.y = this.checkpoint.y;
         } else {
-            this.edgePadding = 100;
-            this.x = random(this.edgePadding, width-this.edgePadding-inventoryWidth);
-            this.y = random(this.edgePadding, height-this.edgePadding);
+            this.edgePadding = 60;
+            this.x = random(this.edgePadding, width/size-this.edgePadding-inventoryWidth);
+            this.y = random(this.edgePadding, height/size-this.edgePadding);
         }
 
         this.speed = 1;
@@ -219,12 +219,12 @@ class Adventurer {
         this.velocityX = velocity.x;
         this.velocityY = velocity.y;
 
-        let edgePadding = 100;
+        let edgePadding = 60;
 
-        if ((this.x > width-edgePadding-inventoryWidth && this.velocityX > 0) || (this.x < edgePadding && this.velocityX < 0)) {
+        if ((this.x > width/size-edgePadding-inventoryWidth && this.velocityX > 0) || (this.x < edgePadding && this.velocityX < 0)) {
             this.velocityX *= -1;
         }
-        if ((this.y > height-edgePadding && this.velocityY > 0) || (this.y < edgePadding && this.velocityY < 0)) {
+        if ((this.y > height/size-edgePadding && this.velocityY > 0) || (this.y < edgePadding && this.velocityY < 0)) {
             this.velocityY *= -1;
         }
 
@@ -363,7 +363,7 @@ class Adventurer {
 
     hover() {
 
-        if(dist(mouseX, mouseY, this.x, this.y) < this.radius/2) popupSelected = this;
+        if(dist(mouseX/size, mouseY/size, this.x, this.y) < this.radius/2) popupSelected = this;
     }
 
     display() {
