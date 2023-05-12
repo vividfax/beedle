@@ -93,6 +93,7 @@ class Adventurer {
                     beetleScoreCount++;
                     buyingBeetleDebt += 50;
                     beedles.push(new Beedle(beedles[i].x, beedles[i].y));
+                    if (adventurers.length < 12) adventurers.push(new Adventurer);
                     break;
                 }
             }
