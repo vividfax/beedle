@@ -619,26 +619,28 @@ function createFog() {
 function displayFog() {
 
     fogLayer.clear();
-    fogLayer.fill(148, 142, 119, 60);
     fogLayer.noStroke();
 
     for (let i = 0; i < fogCircles.length; i++) {
 
-        let drawFog = true;
+        // let drawFog = true;
+        let fogAlpha = 60;
 
         for (let j = 0; j < beedles.length; j++) {
 
             let distance = dist(beedles[j].x, beedles[j].y, fogCircles[i].x, fogCircles[i].y);
 
-            if (distance < beedleVisionRadius) {
-                drawFog = false;
-                break;
+            if (distance < beedleVisionRadius+fogAlpha/2) {
+                // drawFog = false;
+                let newAlpha = distance-(beedleVisionRadius+fogAlpha/2 - fogAlpha);
+                if (newAlpha < fogAlpha) fogAlpha = newAlpha;
             }
         }
 
-        if (drawFog) {
+        // if (drawFog) {
+            fogLayer.fill(148, 142, 119, fogAlpha);
             fogLayer.ellipse(fogCircles[i].x, fogCircles[i].y, fogCircles[i].radius+sin(frameCount+fogCircles[i].breatheOffset)*5);
-        }
+        // }
     }
 
 ////
