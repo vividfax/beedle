@@ -26,11 +26,11 @@ class Town {
         this.waitingForResource = false;
 
         this.inventory = {
-            stone: 0,
-            wood: 0,
-            bones: 0,
-            food: 0,
-            gems: 0,
+            stone: int(random(100)),
+            wood: int(random(100)),
+            bones: int(random(50)),
+            food: int(random(50)),
+            gems: int(random(25)),
         };
 
         this.visible = true;
@@ -44,7 +44,7 @@ class Town {
             this.waitingForResource = false;
         }
 
-        if (frameCount % (60*1.5) == 1) {
+        if (frameCount % (60*3) == 1) {
             for (let [key, value] of Object.entries(this.inventory)) {
                 if (value > 0) this.inventory[key.toString()]--;
             }
