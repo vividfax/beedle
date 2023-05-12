@@ -87,10 +87,10 @@ function setup() {
     textAlign(CENTER, CENTER);
     canvas.addEventListener('contextmenu', event => event.preventDefault());
 
-    player = new Player(width/2, height/2);
+    player = new Player(width/size/2-inventoryWidth/2, height/size/2);
 
     for (let i = 0; i < 1; i++) {
-        beedles.push(new Beedle(width/2, height/2));
+        beedles.push(new Beedle(width/size/2-inventoryWidth/2, height/size/2));
     }
 
     for (let i = 0; i < 3; i++) {
