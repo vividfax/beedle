@@ -28,6 +28,7 @@ class Monster {
         this.maxHitpoints = this.radius*2;
         this.hitpoints = this.maxHitpoints;
         this.dead = false;
+        this.visible = false;
     }
 
     update() {
@@ -117,6 +118,18 @@ class Monster {
     display() {
 
         if (this.dead) return;
+
+        this.visible = false;
+
+        for (let i = 0; i < beedles.length; i++) {
+            let distance = dist(beedles[i].x, beedles[i].y, this.x, this.y);
+            if (distance < beedleVisionRadius) {
+                this.visible = true;
+                break;
+            }
+        }
+
+        if (!this.visible) return;
 
         push();
 

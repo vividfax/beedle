@@ -37,6 +37,7 @@ class Adventurer {
         this.maxHitpoints = 60;
         this.hitpoints = random(this.maxHitpoints/2, this.maxHitpoints);
         this.dead = false;
+        this.visible = false;
 
         this.timeBetweenDrops = 0;
         this.mined = false;
@@ -93,7 +94,7 @@ class Adventurer {
                     beetleScoreCount++;
                     buyingBeetleDebt += 50;
                     beedles.push(new Beedle(beedles[i].x, beedles[i].y));
-                    if (adventurers.length < 12) adventurers.push(new Adventurer);
+                    if (adventurers.length < 12) adventurers.push(new Adventurer(adventurers.length));
                     break;
                 }
             }
@@ -370,6 +371,18 @@ class Adventurer {
     display() {
 
         if (this.dead) return;
+
+        this.visible = false;
+
+        for (let i = 0; i < beedles.length; i++) {
+            let distance = dist(beedles[i].x, beedles[i].y, this.x, this.y);
+            if (distance < beedleVisionRadius) {
+                this.visible = true;
+                break;
+            }
+        }
+
+        if (!this.visible) return;
 
         push();
 

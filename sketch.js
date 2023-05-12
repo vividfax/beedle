@@ -11,9 +11,13 @@ let animals = [];
 let score = 0;
 let buyingBeetleDebt = 0;
 
+let myCanvas;
 let mapLayer;
 let mapCutoutLayer;
 let compendiumPaperLayer;
+let fogLayer;
+let fogMask;
+let fogCircles = [];
 
 let screenWidth = 2560/2-10;
 let screenHeight = 1406/2-10;
@@ -44,6 +48,8 @@ let cartoonFont;
 let beetleUnlocked = false;
 
 let size;
+
+let beedleVisionRadius = 150;
 
 function preload() {
 
@@ -80,7 +86,7 @@ function setup() {
         y = screenHeight;
     }
 
-    createCanvas(x, y);
+    myCanvas = createCanvas(x, y);
     size = 1/screenWidth*width;
     angleMode(DEGREES);
     imageMode(CENTER);
@@ -114,6 +120,8 @@ function setup() {
     createBackground();
     createTerrain();
     createMapCutout();
+    createFog();
+    aboveFogLayer = createGraphics(width/size-inventoryWidth, height/size);
 
     createPopupBox();
 
@@ -198,7 +206,7 @@ function display() {
     scale(size, size);
 
     clear();
-    displayInventory();
+    aboveFogLayer.clear();
 
     if (compendiumVisible) {
 
@@ -209,6 +217,7 @@ function display() {
         pop();
 
         compendium.display();
+        displayInventory();
 
         return;
     }
@@ -251,7 +260,12 @@ function display() {
         beedles[i].display();
     }
 
+    displayFog();
+    image(fogLayer, -inventoryWidth/2 + width/size/2, height/size/2);
+    image(aboveFogLayer, -inventoryWidth/2 + width/size/2, height/size/2);
+
     image(mapCutoutLayer, -inventoryWidth/2 + width/size/2, height/size/2);
+    displayInventory();
     displayPopup();
 }
 
@@ -331,6 +345,8 @@ function displayPopup() {
         if (!newPopupRequired) newPopupRequired = true;
         return;
     }
+
+    if (popupSelected.visible == false) return;
 
     if (newPopupRequired) {
         createPopupBox();
@@ -500,7 +516,12 @@ function createMapCutout() {
 function displayInventory() {
 
     push();
+
     translate(width/size-inventoryWidth+10, 10);
+
+    fill("#333");
+    noStroke();
+    rect(-10-1, -10, inventoryWidth+1, height);
 
     textAlign(LEFT);
     textSize(20);
@@ -571,4 +592,90 @@ function moveBeedles() {
         beedles[closestBeedleIndex].targets.push(targets[i]);
         targets[i].assigned = true;
     }
+}
+
+function createFog() {
+
+    let w = width/size-inventoryWidth;
+    let h = height/size;
+
+    fogLayer = createGraphics(w, h);
+
+    let spacing = 20;
+
+    for (let i = 0; i < w; i += spacing) {
+        for (let j = 0; j < h; j += spacing) {
+
+            fogCircles.push({
+                x: i + random(-15, 15),
+                y: j + random(-15, 15),
+                radius: random(50, 70),
+                breatheOffset: random(360),
+            })
+        }
+    }
+}
+
+function displayFog() {
+
+    fogLayer.clear();
+    fogLayer.fill(148, 142, 119, 60);
+    fogLayer.noStroke();
+
+    for (let i = 0; i < fogCircles.length; i++) {
+
+        let drawFog = true;
+
+        for (let j = 0; j < beedles.length; j++) {
+
+            let distance = dist(beedles[j].x, beedles[j].y, fogCircles[i].x, fogCircles[i].y);
+
+            if (distance < beedleVisionRadius) {
+                drawFog = false;
+                break;
+            }
+        }
+
+        if (drawFog) {
+            fogLayer.ellipse(fogCircles[i].x, fogCircles[i].y, fogCircles[i].radius+sin(frameCount+fogCircles[i].breatheOffset)*5);
+        }
+    }
+
+////
+
+    // let w = width/size-inventoryWidth;
+    // let h = height/size;
+
+    // fill(255);
+    // noStroke();
+
+    // beginShape();
+
+
+    // for (let i = 0; i < beedles.length; i++) {
+
+    //         vertex(0, h);
+    //         vertex(w, h);
+    //         vertex(w, 0);
+    //         vertex(0, 0);
+    //     beginContour();
+
+    //     let steps = 360;
+    //     let radius = 100;
+    //     let x = beedles[i].x;
+    //     let y = beedles[i].y;
+
+    //     for (let i = 0; i < steps+1; i++) {
+
+    //         angleMode(RADIANS);
+    //         let vX = (x + radius * cos(2 * PI * i / steps));
+    //         let vY = (y + radius * sin(2 * PI * i / steps));
+
+    //         vertex(vX, vY);
+    //     }
+    //     endContour();
+    // }
+
+
+    // endShape(CLOSE);
 }

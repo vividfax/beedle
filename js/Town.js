@@ -19,6 +19,7 @@ class Town {
         this.name = townNames[townNumber];
         this.resource = resources[townNumber];
         this.visiting = false;
+        this.visited = false;
 
         this.radius = 60;
 
@@ -31,6 +32,8 @@ class Town {
             food: 0,
             gems: 0,
         };
+
+        this.visible = true;
     }
 
     update() {
