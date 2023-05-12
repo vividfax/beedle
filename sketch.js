@@ -268,7 +268,7 @@ function mousePressed() {
 
     let edgePadding = 30;
 
-    if (mouseX > width/size-edgePadding || mouseX < edgePadding+inventoryWidth || mouseY > height-edgePadding || mouseY < edgePadding) return;
+    if (mouseX > width-edgePadding*3-inventoryWidth || mouseX < edgePadding || mouseY > height-edgePadding || mouseY < edgePadding) return;
 
     if (keyIsDown(SHIFT) || mouseButton != LEFT) {
 
