@@ -240,7 +240,7 @@ function display() {
 
 function hoverOverInventory() {
 
-    if (mouseX > inventoryWidth && mouseX < width && mouseY > 0 && mouseY < height) {
+    if (mouseX > 0 && mouseX < width-inventoryWidth && mouseY > 0 && mouseY < height) {
         compendiumVisible = false;
     } else {
         compendiumVisible = true;
