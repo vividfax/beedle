@@ -375,7 +375,7 @@ function displayPopup() {
         else if (popupSelected instanceof Adventurer && key.toString() != "gems") txt += "/8";
         else if (popupSelected instanceof Adventurer && key.toString() == "gems") txt += "/5";
 
-        if (value > 100) {
+        if (value >= 100) {
             stroke(150, 0, 0, 200);
             fill(150, 0, 0, 200);
         } else {
