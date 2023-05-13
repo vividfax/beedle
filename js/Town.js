@@ -90,17 +90,12 @@ class Town {
 
     display() {
 
-        push();
-
-        noStroke();
-
-        // if (this.waitingForResource) {
-            // fill("#fff")
-        // } else {
-        //     fill("#aaa");
-        // }
-        // ellipse(this.x, this.y, this.radius);
         image(castleImage, this.x, this.y, this.radius, this.radius);
+    }
+
+    displayName() {
+
+        push();
 
         fill(0, 200);
         stroke(0, 200);

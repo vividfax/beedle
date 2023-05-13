@@ -98,7 +98,8 @@ class Adventurer {
                     compendium.unlockBeetle();
                     beetleScoreCount++;
                     buyingBeetleDebt += 50;
-                    beedles.push(new Beedle(beedles[i].x, beedles[i].y));
+                    beedles[i].tradingTimer = 60*1.5;
+                    beedles.push(new Beedle(beedles[i].x, beedles[i].y, beedles.length));
                     unassignWaypoints();
                     if (adventurers.length < 12) adventurers.push(new Adventurer(adventurers.length));
                     break;
@@ -158,6 +159,14 @@ class Adventurer {
         for (let i = 0; i < animals.length; i++) {
             if (this.collide(animals[i])) {
                 if (!inFight) inFight = true;
+                break;
+            }
+        }
+
+        for (let i = 0; i < beedles.length; i++) {
+            if (this.collide(beedles[i])) {
+                if (!inFight) inFight = true;
+                if (!beedles[i].trading) beedles[i].trading = true;
                 break;
             }
         }
@@ -401,27 +410,27 @@ class Adventurer {
 
         if (this.dead) return;
 
-        this.visible = false;
+        let opacity = 0;
 
         for (let i = 0; i < beedles.length; i++) {
-            let distance = dist(beedles[i].x, beedles[i].y, this.x, this.y);
-            if (distance < beedleVisionRadius) {
-                this.visible = true;
-                break;
-            }
-        }
 
-        if (!this.visible) return;
+            let distance = dist(beedles[i].x, beedles[i].y, this.x, this.y);
+            let newOpacity = (beedleVisionRadius-distance)*4;
+            opacity = newOpacity > opacity ? newOpacity : opacity;
+        }
 
         push();
 
         if (this.carryingBeetle) {
             let borderWeight = sin(frameCount*3)*3 + 4;
-            stroke("#FFE600");
+            let colour = color("#FFE600");
+            colour.setAlpha(opacity);
+            stroke(colour);
             strokeWeight(borderWeight);
             ellipse(this.x, this.y, this.radius+borderWeight);
         }
 
+        tint(255, opacity);
         image(adventurerImages[this.number], this.x, this.y, this.radius, this.radius);
 
         pop();

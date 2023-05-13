@@ -5,7 +5,7 @@ class Shout {
         this.x = x;
         this.y = y;
         this.target = target;
-        this.radius = 20;
+        this.radius = 30;
 
         this.lifeTime = 0;
         this.visible = false;

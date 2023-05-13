@@ -1,6 +1,6 @@
 class Beedle {
 
-    constructor(x, y) {
+    constructor(x, y, index) {
 
         this.x = x;
         this.y = y;
@@ -11,6 +11,12 @@ class Beedle {
         this.velocity = 1;
         this.moved = false;
         this.visiting;
+
+        this.beedleLineColour = beedleLineColours[index];
+
+        this.trading = false;
+        this.tradingTimer = 60*1.5;
+        if (index == 0) this.tradingTimer = 0;
     }
 
     update() {
@@ -62,7 +68,28 @@ class Beedle {
             this.targets.shift();
         }
 
-        this.move();
+        if (this.trading && this.tradingTimer > 60*6) {
+            this.trading = false;
+            this.tradingTimer = 0;
+            this.move();
+        } else if (this.trading && this.tradingTimer > 60*1.5) {
+            this.tradingTimer++;
+            this.move();
+        } else if (this.trading) {
+            this.tradingTimer++;
+            if (random() < 0.05) {
+                let keys = Object.keys(player.inventory);
+                let randomResource = keys[Math.floor(Math.random() * keys.length)];
+                if (player.inventory[randomResource.toString()] > 0) {
+                    player.inventory[randomResource.toString()]--;
+                    player.lifetimeDelivery[randomResource.toString()]++;
+                    score += randomResource.toString() == "gems" ? 5 : 1;
+                }
+            }
+        } else {
+            this.move();
+        }
+
     }
 
     collide(collider) {
@@ -87,12 +114,12 @@ class Beedle {
 
         this.velocity = 1;
 
-        for (let i = 0; i < adventurers.length; i++) {
-            if (this.collide(adventurers[i])) {
-                this.velocity = 0.2;
-                break;
-            }
-        }
+        // for (let i = 0; i < adventurers.length; i++) {
+        //     if (this.collide(adventurers[i])) {
+        //         this.velocity = 0.2;
+        //         break;
+        //     }
+        // }
 
         for (let i = 0; i < monsters.length; i++) {
             if (this.collide(monsters[i])) {
@@ -118,8 +145,39 @@ class Beedle {
 
     display() {
 
-        push();
         image(playerImage, this.x, this.y, 750 * 0.1, 650 * 0.1);
+    }
+
+    displayLine() {
+
+        push();
+        stroke(this.beedleLineColour);
+
+        if (this.targets.length > 0) {
+
+            let previousTarget = this;
+            let lineWeight = 3;
+
+            for (let i = 0; i < this.targets.length; i++) {
+
+                if (this.targets[i].visualLineWeight < lineWeight) {
+                    this.targets[i].visualLineWeight += lineWeight/50;
+                } else if (this.targets[i].visualLineWeight > lineWeight+0.1) {
+                    this.targets[i].visualLineWeight -= 0.1;
+                }
+
+                let weight = this.targets[i].visualLineWeight;
+                if (weight <= 0.1) break;
+
+                strokeWeight(weight);
+                myCanvas.drawingContext.setLineDash([8, 8]);
+                line(this.targets[i].x, this.targets[i].y, previousTarget.x, previousTarget.y);
+                previousTarget = this.targets[i];
+                lineWeight -= 0.5;
+                if (lineWeight <= 0.5) lineWeight = 0;
+            }
+        }
+        myCanvas.drawingContext.setLineDash([]);
         pop();
     }
 }

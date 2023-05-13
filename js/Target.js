@@ -7,6 +7,7 @@ class Target {
         this.radius = 0;
         this.visualRadius = 0;
         this.assignedTo;
+        this.visualLineWeight = 0;
 
         this.assigned = false;
     }

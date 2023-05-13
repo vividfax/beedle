@@ -70,6 +70,13 @@ class Monster {
             }
         }
 
+        for (let i = 0; i < beedles.length; i++) {
+            if (this.collide(beedles[i])) {
+                if (!inFight) inFight = true;
+                break;
+            }
+        }
+
         if (!inFight) {
             this.move();
             this.eat();
@@ -129,22 +136,19 @@ class Monster {
 
         if (this.dead) return;
 
-        this.visible = false;
+        let opacity = 0;
 
         for (let i = 0; i < beedles.length; i++) {
-            let distance = dist(beedles[i].x, beedles[i].y, this.x, this.y);
-            if (distance < beedleVisionRadius) {
-                this.visible = true;
-                break;
-            }
-        }
 
-        if (!this.visible) return;
+            let distance = dist(beedles[i].x, beedles[i].y, this.x, this.y);
+            let newOpacity = (beedleVisionRadius-distance)*4;
+            opacity = newOpacity > opacity ? newOpacity : opacity;
+        }
 
         push();
 
-        stroke(0);
-        fill(50);
+        stroke(0, opacity);
+        fill(50, opacity);
         ellipse(this.x, this.y, this.radius);
 
         pop();

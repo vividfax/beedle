@@ -107,22 +107,19 @@ class Animal {
 
         if (this.dead) return;
 
-        this.visible = false;
+        let opacity = 0;
 
         for (let i = 0; i < beedles.length; i++) {
-            let distance = dist(beedles[i].x, beedles[i].y, this.x, this.y);
-            if (distance < beedleVisionRadius) {
-                this.visible = true;
-                break;
-            }
-        }
 
-        if (!this.visible) return;
+            let distance = dist(beedles[i].x, beedles[i].y, this.x, this.y);
+            let newOpacity = (beedleVisionRadius-distance)*4;
+            opacity = newOpacity > opacity ? newOpacity : opacity;
+        }
 
         push();
 
         noStroke();
-        fill(200, 100);
+        fill(200, opacity-200);
         ellipse(this.x, this.y, this.radius);
 
         pop();

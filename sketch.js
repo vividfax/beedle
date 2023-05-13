@@ -55,6 +55,10 @@ let size;
 
 let beedleVisionRadius = 150;
 
+// https://coolors.co/ff96ee-ffabab-ffbc74-7af587-7df8d7-88c5ff-9580ff-bc88ff
+// https://coolors.co/ffdada-c4ffd1-c9e5ff-cac4ff
+let beedleLineColours = ["#FF96EE", "#FFABAB", "#FFBC74", "#7AF587", "#7DF8D7", "#88C5FF", "#9580FF", "#BC88FF", "#FFDADA", "#C4FFD1", "#C9E5FF", "#CAC4FF"];
+
 function preload() {
 
     lootImages.stone = loadImage("./images/Stone.png");
@@ -101,9 +105,10 @@ function setup() {
     canvas.addEventListener('contextmenu', event => event.preventDefault());
 
     player = new Player(width/size/2-inventoryWidth/2, height/size/2);
+    shuffle(beedleLineColours, true);
 
     for (let i = 0; i < 1; i++) {
-        beedles.push(new Beedle(width/size/2-inventoryWidth/2, height/size/2));
+        beedles.push(new Beedle(width/size/2-inventoryWidth/2, height/size/2, i));
     }
 
     for (let i = 0; i < 3; i++) {
@@ -234,20 +239,31 @@ function display() {
 
     image(mapLayer, -inventoryWidth/2 + width/size/2, height/size/2, width/size-inventoryWidth, height/size);
 
-    for (let i = 0; i < mountains.length; i++) {
-        mountains[i].display();
-    }
-
-    for (let i = 0; i < forests.length; i++) {
-        forests[i].display();
+    for (let i = 0; i < towns.length; i++) {
+        towns[i].display()
     }
 
     for (let i = 0; i < loots.length; i++) {
         loots[i].display();
     }
 
+    displayFog();
+    image(fogLayer, -inventoryWidth/2 + width/size/2, height/size/2);
+
     for (let i = 0; i < towns.length; i++) {
-        towns[i].display()
+        towns[i].displayName()
+    }
+
+    for (let i = 0; i < beedles.length; i++) {
+        beedles[i].displayLine();
+    }
+
+    for (let i = 0; i < mountains.length; i++) {
+        mountains[i].display();
+    }
+
+    for (let i = 0; i < forests.length; i++) {
+        forests[i].display();
     }
 
     for (let i = 0; i < animals.length; i++) {
@@ -262,15 +278,12 @@ function display() {
         adventurers[i].display();
     }
 
-    displayFog();
-    image(fogLayer, -inventoryWidth/2 + width/size/2, height/size/2);
+    for (let i = 0; i < targets.length; i++) {
+        targets[i].display();
+    }
 
     for (let i = 0; i < shouts.length; i++) {
         shouts[i].display();
-    }
-
-    for (let i = 0; i < targets.length; i++) {
-        targets[i].display();
     }
 
     for (let i = 0; i < beedles.length; i++) {
@@ -303,6 +316,7 @@ function mousePressed() {
 
                 let index = beedles[i].targets.indexOf(beedles[i].targets[j]);
                 if (index != -1) beedles[i].targets.splice(index, 1);
+                if (beedles[i].targets[j] != undefined) beedles[i].targets[j].visualLineWeight = 0;
                 return;
             }
         }
@@ -311,6 +325,8 @@ function mousePressed() {
     let edgePadding = 30;
 
     if (mouseX > width-edgePadding*3-inventoryWidth || mouseX < edgePadding || mouseY > height-edgePadding || mouseY < edgePadding) return;
+
+    unassignWaypoints();
 
     if (keyIsDown(SHIFT) || mouseButton != LEFT) {
 
