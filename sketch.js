@@ -47,6 +47,7 @@ let needToCheckCompendium = false;
 
 let beetleDescriptionFont;
 let cartoonFont;
+let targetCrossFont;
 
 let beetleUnlocked = false;
 
@@ -75,6 +76,7 @@ function preload() {
 
     beetleDescriptionFont = loadFont("./fonts/Allura-Regular.ttf");
     cartoonFont = loadFont("./fonts/ConcertOne-Regular.ttf");
+    targetCrossFont = loadFont("./fonts/ArchitectsDaughter-Regular.ttf");
 }
 
 function setup() {
@@ -188,6 +190,12 @@ function update() {
 
     for (let i = 0; i < shouts.length; i++) {
         shouts[i].update();
+    }
+
+    for (let i = 0; i < targets.length; i++) {
+        targets[i].radius = (20-i)/20*9;
+        if (targets[i].radius < 3) targets[i].radius = 3;
+        targets[i].update();
     }
 
     moveBeedles();
@@ -635,7 +643,6 @@ function displayFog() {
             let distance = dist(beedles[j].x, beedles[j].y, fogCircles[i].x, fogCircles[i].y);
 
             if (distance < beedleVisionRadius+fogAlpha/2) {
-                // drawFog = false;
                 let newAlpha = distance-(beedleVisionRadius+fogAlpha/2 - fogAlpha);
                 if (newAlpha < fogAlpha) fogAlpha = newAlpha;
             }
@@ -646,12 +653,16 @@ function displayFog() {
     }
 }
 
-function reassignWaypoints() {
+function unassignWaypoints() {
 
     for (let i = 0; i < beedles.length; i++) {
         for (let j = 0; j < beedles[i].targets.length; j++) {
             beedles[i].targets[j].assigned = false;
         }
         beedles[i].targets = [];
+    }
+
+    for (let i = 0; i < targets.length; i++) {
+        if (targets[i].assigned) targets[i].assigned = false;
     }
 }

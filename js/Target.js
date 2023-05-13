@@ -4,19 +4,28 @@ class Target {
 
         this.x = x;
         this.y = y;
+        this.radius = 0;
+        this.visualRadius = 0;
 
         this.assigned = false;
+    }
+
+    update() {
+
+        if (this.radius != this.visualRadius) {
+            this.visualRadius = lerp(this.visualRadius, this.radius, 0.1);
+        }
     }
 
     display() {
 
         push();
         translate(this.x, this.y);
-        stroke(255);
-        strokeWeight(2);
-        let size = 5;
-        line(-size, -size, size, size);
-        line(-size, size, size, -size);
+        fill(255);
+        noStroke();
+        textFont(targetCrossFont);
+        textSize(this.visualRadius*4);
+        text("X", 0, -this.visualRadius/1.2);
         pop();
     }
 

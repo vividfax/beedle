@@ -85,6 +85,11 @@ class Adventurer {
         //     }
         // }
 
+        if (this.carryingBeetle && !beetleUnlocked) {
+            this.carryingBeetle = false;
+            wildBeetleCount--;
+        }
+
         if (this.carryingBeetle && score >= 50) {
             for (let i = 0; i < beedles.length; i++) {
                 if (this.checkProximity(beedles[i].x, beedles[i].y, this.radius/2 + player.radius/2)) {
@@ -94,7 +99,7 @@ class Adventurer {
                     beetleScoreCount++;
                     buyingBeetleDebt += 50;
                     beedles.push(new Beedle(beedles[i].x, beedles[i].y));
-                    reassignWaypoints();
+                    unassignWaypoints();
                     if (adventurers.length < 12) adventurers.push(new Adventurer(adventurers.length));
                     break;
                 }
@@ -179,7 +184,7 @@ class Adventurer {
             this.collect();
             this.eat();
 
-            if (!this.carryingBeetle && !this.headingHome && wildBeetleCount < 1 && beetleUnlocked && score > 50 && random() < 0.1) {
+            if (!this.carryingBeetle && !this.headingHome && wildBeetleCount < 1 && beetleUnlocked && score-buyingBeetleDebt > 50 && random() < 0.1) {
 
                 let tooCloseToTownOrPlayer = false;
 
