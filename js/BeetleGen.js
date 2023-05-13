@@ -6,7 +6,7 @@ let questDescriptions = [
     "Sell wood\n$/500",
     "Sell stone\n$/200",
     "Sell bones\n$/50",
-    "Witness epic\nmonster defeat\n$/15",
+    "Witness\nepic battles\n$/15",
     "Hoard gems\n$/10",
     "Hoard coins\n$/1500",
     "Sell food\n$/150",
@@ -74,7 +74,7 @@ class BeetleGen {
         } else if (this.index == 3) {
             if (player.lifetimeDelivery.bones >= 50) this.unlocked = true;
         } else if (this.index == 4) {
-            if (player.bigBadDeathWitness >= 15) this.unlocked = true;
+            if (player.epicBattleWitness >= 15) this.unlocked = true;
         } else if (this.index == 5) {
             if (player.inventory.gems >= 10) this.unlocked = true;
         } else if (this.index == 6) {
@@ -117,7 +117,7 @@ class BeetleGen {
             } else if (this.index == 3) {
                 description = description.replace("$", player.lifetimeDelivery.bones);
             } else if (this.index == 4) {
-                description = description.replace("$", player.bigBadDeathWitness);
+                description = description.replace("$", player.epicBattleWitness);
             } else if (this.index == 5) {
                 description = description.replace("$", player.inventory.gems);
             } else if (this.index == 6) {

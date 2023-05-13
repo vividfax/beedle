@@ -52,7 +52,7 @@ class Monster {
                         for (let j = 0; j < beedles.length; j++) {
                             let distance = dist(beedles[j].x, beedles[j].y, this.x, this.y);
                             if (distance < beedleVisionRadius) {
-                                player.bigBadDeathWitness++;
+                                player.epicBattleWitness++;
                                 break;
                             }
                         }
@@ -147,7 +147,7 @@ class Monster {
 
         push();
 
-        stroke(0, opacity);
+        stroke(0, 0, 0, opacity);
         fill(50, opacity);
         ellipse(this.x, this.y, this.radius);
 

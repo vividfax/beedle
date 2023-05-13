@@ -26,6 +26,7 @@ let inventoryWidth = 100;
 
 let lootImages = {};
 let adventurerImages = [];
+let adventurerTints = [];
 let coinImage;
 let playerImage;
 let deathShoutImage;
@@ -54,6 +55,8 @@ let beetleUnlocked = false;
 let size;
 
 let beedleVisionRadius = 150;
+
+let tradingWithPortrait = [0, 0, 0, 0];
 
 // https://coolors.co/ff96ee-ffabab-ffbc74-7af587-7df8d7-88c5ff-9580ff-bc88ff
 // https://coolors.co/ffdada-c4ffd1-c9e5ff-cac4ff
@@ -136,10 +139,12 @@ function setup() {
 
     createPopupBox();
 
-    for (let i = 0; i < 700; i++) draw();
+    createAdventurerImageTints();
 }
 
 function draw() {
+
+    if (frameCount > 30 && frameRate() < 30) console.log('dropped frame ' + frameCount);
 
     hoverOverInventory();
 
@@ -594,6 +599,16 @@ function displayInventory() {
         text("<<<\nNew\nbeetle!\n<<<", 0, height/size/2);
     }
 
+    for (let i = 0; i < beedles.length; i++) {
+        let tradingWith = beedles[i].tradingWith;
+        if (beedles[i].trading && tradingWith instanceof Adventurer) {
+            text('"Hello!"', 0, height/size-60 + sin(frameCount*3)*3);
+            image(adventurerImages[tradingWith.number], 33, height/size-15, 50, 50);
+            if (beedles[i].newTrade) beedles[i].newTrade = false;
+            break;
+        }
+    }
+
     pop();
 }
 
@@ -650,7 +665,7 @@ function createFog() {
 
     fogLayer = createGraphics(w, h);
 
-    let spacing = 20;
+    let spacing = 30;
 
     for (let i = 0; i < w; i += spacing) {
         for (let j = 0; j < h; j += spacing) {
@@ -658,7 +673,7 @@ function createFog() {
             fogCircles.push({
                 x: i + random(-15, 15),
                 y: j + random(-15, 15),
-                radius: random(50, 70),
+                radius: random(75, 105),
                 breatheOffset: random(360),
             })
         }
@@ -672,7 +687,7 @@ function displayFog() {
 
     for (let i = 0; i < fogCircles.length; i++) {
 
-        let fogAlpha = 60;
+        let fogAlpha = 50;
 
         for (let j = 0; j < beedles.length; j++) {
 
@@ -700,5 +715,24 @@ function unassignWaypoints() {
 
     for (let i = 0; i < targets.length; i++) {
         if (targets[i].assigned) targets[i].assigned = false;
+    }
+}
+
+function createAdventurerImageTints() {
+
+    let graphicsSize = adventurers[0].radius;
+
+    for (let i = 0; i < adventurerImages.length; i++) {
+
+        let arr = [];
+
+        for (let j = 0; j < 256; j+=10) {
+            let graphics = createGraphics(graphicsSize, graphicsSize);
+            graphics.tint(255, j);
+            graphics.image(adventurerImages[i], 0, 0, graphicsSize, graphicsSize);
+            arr.push(graphics);
+        }
+
+        adventurerTints.push(arr);
     }
 }

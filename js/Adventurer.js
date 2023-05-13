@@ -165,11 +165,12 @@ class Adventurer {
 
         for (let i = 0; i < beedles.length; i++) {
             if (this.collide(beedles[i])) {
-                if (!inFight) inFight = true;
                 if (!beedles[i].trading) {
                     beedles[i].trading = true;
                     beedles[i].tradingWith = this;
+                    beedles[i].newTrade = true;
                 }
+                if (!inFight && beedles[i].tradingWith == this) inFight = true;
                 break;
             }
         }
@@ -179,6 +180,14 @@ class Adventurer {
             shouts.push(new Shout(this.x, this.y, -1));
             this.dropAll();
             this.init(false);
+
+            for (let j = 0; j < beedles.length; j++) {
+                let distance = dist(beedles[j].x, beedles[j].y, this.x, this.y);
+                if (distance < beedleVisionRadius) {
+                    player.epicBattleWitness++;
+                    break;
+                }
+            }
             return;
         }
 
@@ -422,8 +431,15 @@ class Adventurer {
             opacity = newOpacity > opacity ? newOpacity : opacity;
         }
 
-        if (opacity > 0) this.visible = true;
-        else this.visible = false;
+        if (opacity > 0) {
+            this.visible = true;
+        } else {
+            this.visible = false;
+            return;
+        }
+
+        opacity = int(opacity);
+        if (opacity > 255) opacity = 255;
 
         push();
 
@@ -436,8 +452,7 @@ class Adventurer {
             ellipse(this.x, this.y, this.radius+borderWeight);
         }
 
-        tint(255, opacity);
-        image(adventurerImages[this.number], this.x, this.y, this.radius, this.radius);
+        image(adventurerTints[this.number][int(opacity/10)], this.x, this.y, this.radius, this.radius);
 
         pop();
     }

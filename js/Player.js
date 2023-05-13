@@ -32,7 +32,7 @@ class Player {
             gems: 0,
         }
 
-        this.bigBadDeathWitness = 0;
+        this.epicBattleWitness = 0;
     }
 
     update() {

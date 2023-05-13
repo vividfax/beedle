@@ -16,6 +16,7 @@ class Beedle {
 
         this.trading = false;
         this.tradingWith;
+        this.newTrade = false;
         this.tradingTimer = 60*1.5;
         if (index == 0) this.tradingTimer = 0;
     }
@@ -55,6 +56,7 @@ class Beedle {
                 }
             }
         }
+
         for (let i = 0; i < loots.length; i++) {
             if (this.checkProximity(loots[i].x, loots[i].y, this.radius/2 + loots[i].radius)) {
 
@@ -63,17 +65,12 @@ class Beedle {
             }
         }
 
-        if (this.targets.length == 0) return;
-
-        if (dist(this.targets[0].x, this.targets[0].y, this.x, this.y) < 1) {
-            this.targets.shift();
-        }
-
         if (this.trading && this.tradingTimer > 60*6) {
             this.trading = false;
             this.tradingTimer = 0;
             this.move();
         } else if (this.trading && this.tradingTimer > 60*1.5) {
+            this.tradingWith = -1;
             this.tradingTimer++;
             this.move();
         } else if (this.trading) {
@@ -97,6 +94,11 @@ class Beedle {
             this.move();
         }
 
+        if (this.targets.length == 0) return;
+
+        if (dist(this.targets[0].x, this.targets[0].y, this.x, this.y) < 1) {
+            this.targets.shift();
+        }
     }
 
     collide(collider) {
