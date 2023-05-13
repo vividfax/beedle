@@ -15,6 +15,7 @@ class Beedle {
         this.beedleLineColour = beedleLineColours[index];
 
         this.trading = false;
+        this.tradingWith;
         this.tradingTimer = 60*1.5;
         if (index == 0) this.tradingTimer = 0;
     }
@@ -77,13 +78,19 @@ class Beedle {
             this.move();
         } else if (this.trading) {
             this.tradingTimer++;
-            if (random() < 0.05) {
+            if (random() < 0.1) {
                 let keys = Object.keys(player.inventory);
                 let randomResource = keys[Math.floor(Math.random() * keys.length)];
                 if (player.inventory[randomResource.toString()] > 0) {
-                    player.inventory[randomResource.toString()]--;
-                    player.lifetimeDelivery[randomResource.toString()]++;
-                    score += randomResource.toString() == "gems" ? 5 : 1;
+                    if (randomResource == "gems" && this.tradingWith.inventory[randomResource.toString()] >= 5) {
+                        // do nothing
+                    } else if (this.tradingWith.inventory[randomResource.toString()] >= maxResourceCarry) {
+                        // do nothing
+                    } else {
+                        player.inventory[randomResource.toString()]--;
+                        player.lifetimeDelivery[randomResource.toString()]++;
+                        score += randomResource.toString() == "gems" ? 5 : 1;
+                    }
                 }
             }
         } else {

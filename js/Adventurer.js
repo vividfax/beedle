@@ -166,7 +166,10 @@ class Adventurer {
         for (let i = 0; i < beedles.length; i++) {
             if (this.collide(beedles[i])) {
                 if (!inFight) inFight = true;
-                if (!beedles[i].trading) beedles[i].trading = true;
+                if (!beedles[i].trading) {
+                    beedles[i].trading = true;
+                    beedles[i].tradingWith = this;
+                }
                 break;
             }
         }
@@ -418,6 +421,9 @@ class Adventurer {
             let newOpacity = (beedleVisionRadius-distance)*4;
             opacity = newOpacity > opacity ? newOpacity : opacity;
         }
+
+        if (opacity > 0) this.visible = true;
+        else this.visible = false;
 
         push();
 
