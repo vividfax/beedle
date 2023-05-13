@@ -15,8 +15,8 @@ class Beedle {
         this.beedleLineColour = beedleLineColours[index];
 
         this.trading = false;
+        this.tradingInvincible = false;
         this.tradingWith;
-        this.newTrade = false;
         this.tradingTimer = 60*1.5;
         if (index == 0) this.tradingTimer = 0;
     }
@@ -65,12 +65,12 @@ class Beedle {
             }
         }
 
-        if (this.trading && this.tradingTimer > 60*6) {
-            this.trading = false;
+        if (this.tradingInvincible && this.tradingTimer > 60*6) {
+            this.tradingInvincible = false;
             this.tradingTimer = 0;
             this.move();
         } else if (this.trading && this.tradingTimer > 60*1.5) {
-            this.tradingWith = -1;
+            this.trading = false;
             this.tradingTimer++;
             this.move();
         } else if (this.trading) {
@@ -90,6 +90,9 @@ class Beedle {
                     }
                 }
             }
+        } else if (this.tradingInvincible) {
+            this.tradingTimer++;
+            this.move();
         } else {
             this.move();
         }

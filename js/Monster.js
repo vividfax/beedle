@@ -145,9 +145,11 @@ class Monster {
             opacity = newOpacity > opacity ? newOpacity : opacity;
         }
 
+        if (opacity < 0) return;
+
         push();
 
-        stroke(0, 0, 0, opacity);
+        stroke(0, 0, 0, opacity/2);
         fill(50, opacity);
         ellipse(this.x, this.y, this.radius);
 

@@ -1,11 +1,14 @@
-let townNames = ["Gerudo", "Hateno", "Tarrey"];
-let resources = ["stone", "wood", "bones"];
+let townNames = [];
 
 class Town {
 
     constructor(townNumber) {
 
         this.townNumber = townNumber;
+
+        this.name = this.createName();
+        if (townNames.includes(this.name)) this.name = this.createName();
+        townNames.push(this.name);
 
         this.edgePadding = 200;
         this.x = random(this.edgePadding, width/size-this.edgePadding-inventoryWidth);
@@ -16,8 +19,6 @@ class Town {
             this.y = random(this.edgePadding, height/size-this.edgePadding);
         }
 
-        this.name = townNames[townNumber];
-        this.resource = resources[townNumber];
         this.visiting = false;
         this.visited = false;
 
@@ -91,6 +92,19 @@ class Town {
     display() {
 
         image(castleImage, this.x, this.y, this.radius, this.radius);
+    }
+
+    createName() {
+
+        let prefix = random(guideWords.words);
+        let mid = random(guideWords.words)
+        let suffix = random(guideWords.words);
+
+        let name = [prefix, mid, suffix].join("");
+        name = name.slice(0, int(random(3, 8)));
+        name = name.replace(/^\w/, (c) => c.toUpperCase());
+
+        return name;
     }
 
     displayName() {

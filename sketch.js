@@ -56,11 +56,14 @@ let size;
 
 let beedleVisionRadius = 150;
 
-let tradingWithPortrait = [0, 0, 0, 0];
+let tradingPortraitAventurer;
+let tradingPortraitSize = 0;
 
 // https://coolors.co/ff96ee-ffabab-ffbc74-7af587-7df8d7-88c5ff-9580ff-bc88ff
 // https://coolors.co/ffdada-c4ffd1-c9e5ff-cac4ff
 let beedleLineColours = ["#FF96EE", "#FFABAB", "#FFBC74", "#7AF587", "#7DF8D7", "#88C5FF", "#9580FF", "#BC88FF", "#FFDADA", "#C4FFD1", "#C9E5FF", "#CAC4FF"];
+
+let guideWords;
 
 function preload() {
 
@@ -84,6 +87,8 @@ function preload() {
     beetleDescriptionFont = loadFont("./fonts/Allura-Regular.ttf");
     cartoonFont = loadFont("./fonts/ConcertOne-Regular.ttf");
     targetCrossFont = loadFont("./fonts/ArchitectsDaughter-Regular.ttf");
+
+    guideWords = loadJSON("./json/guide-words.json");
 }
 
 function setup() {
@@ -229,11 +234,11 @@ function display() {
         push();
         scale(-1, 1);
         image(compendiumPaperLayer, -(-inventoryWidth/2 + width/size/2), height/size/2, width/size-inventoryWidth, height/size);
+        image(mapCutoutLayer, -(-inventoryWidth/2 + width/size/2), height/size/2);
         stroke("#333");
         strokeWeight(1);
         noFill();
-        rect(0, 0, width/size, height/size);
-        image(mapCutoutLayer, -(-inventoryWidth/2 + width/size/2), height/size/2);
+        rect(0, 0, -(width/size-inventoryWidth), height/size-1);
         pop();
 
         compendium.display();
@@ -295,11 +300,11 @@ function display() {
         beedles[i].display();
     }
 
+    image(mapCutoutLayer, -inventoryWidth/2 + width/size/2, height/size/2);
     stroke("#333");
     strokeWeight(1);
     noFill();
-    rect(0, 0, width/size, height/size);
-    image(mapCutoutLayer, -inventoryWidth/2 + width/size/2, height/size/2);
+    rect(0, 0, width/size-inventoryWidth, height/size-1);
     displayInventory();
     displayPopup();
 }
@@ -599,14 +604,31 @@ function displayInventory() {
         text("<<<\nNew\nbeetle!\n<<<", 0, height/size/2);
     }
 
+    let trading = false;
+
     for (let i = 0; i < beedles.length; i++) {
-        let tradingWith = beedles[i].tradingWith;
-        if (beedles[i].trading && tradingWith instanceof Adventurer) {
-            text('"Hello!"', 0, height/size-60 + sin(frameCount*3)*3);
-            image(adventurerImages[tradingWith.number], 33, height/size-15, 50, 50);
-            if (beedles[i].newTrade) beedles[i].newTrade = false;
+        if (beedles[i].trading) {
+            tradingPortraitAventurer = beedles[i].tradingWith;
+            trading = true;
             break;
         }
+    }
+
+    if (trading && tradingPortraitSize < 50) {
+        tradingPortraitSize += 2;
+    } else if (!trading && tradingPortraitSize > 0) {
+        tradingPortraitSize -= 2;
+    }
+
+    if (tradingPortraitAventurer instanceof Adventurer && tradingPortraitSize > 0) {
+        if (tradingPortraitSize >= 50) {
+
+            textAlign(CENTER);
+            textSize(20);
+            let speech = tradingPortraitAventurer.inFight ? '"Argh!"' : '"Hello!"';
+            text(speech, 33, 270-60 + sin(frameCount*3)*3);
+        }
+        image(adventurerImages[tradingPortraitAventurer.number], 33, 270-15, tradingPortraitSize, tradingPortraitSize);
     }
 
     pop();

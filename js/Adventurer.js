@@ -62,6 +62,8 @@ class Adventurer {
         this.headingTo = 0;
 
         this.carryingBeetle = false;
+
+        this.inFight = false;
     }
 
     update() {
@@ -145,11 +147,11 @@ class Adventurer {
 
         if (this.dead) return;
 
-        let inFight = false;
+        this.inFight = false;
 
         for (let i = 0; i < monsters.length; i++) {
             if (this.collide(monsters[i])) {
-                if (!inFight) inFight = true;
+                if (!this.inFight) this.inFight = true;
                 monsters[i].hitpoints--;
                 if (monsters[i].hitpoints <= 0) this.fought = true;
                 break;
@@ -158,19 +160,19 @@ class Adventurer {
 
         for (let i = 0; i < animals.length; i++) {
             if (this.collide(animals[i])) {
-                if (!inFight) inFight = true;
+                if (!this.inFight) this.inFight = true;
                 break;
             }
         }
 
         for (let i = 0; i < beedles.length; i++) {
             if (this.collide(beedles[i])) {
-                if (!beedles[i].trading) {
+                if (!beedles[i].tradingInvincible) {
                     beedles[i].trading = true;
+                    beedles[i].tradingInvincible = true;
                     beedles[i].tradingWith = this;
-                    beedles[i].newTrade = true;
                 }
-                if (!inFight && beedles[i].tradingWith == this) inFight = true;
+                if (!this.inFight && beedles[i].tradingWith == this) this.inFight = true;
                 break;
             }
         }
@@ -191,7 +193,7 @@ class Adventurer {
             return;
         }
 
-        if (!this.dead && !inFight) {
+        if (!this.dead && !this.inFight) {
 
             if (!this.headingHome && !this.passingThroughTown && this.inventory.gems >= 5) {
                 this.headingHome = true;
@@ -205,7 +207,7 @@ class Adventurer {
             this.collect();
             this.eat();
 
-            if (!this.carryingBeetle && !this.headingHome && wildBeetleCount < 1 && beetleUnlocked && score-buyingBeetleDebt > 50 && random() < 0.1) {
+            if (!this.carryingBeetle && !this.headingHome && wildBeetleCount < 1 && beetleUnlocked && score-buyingBeetleDebt >= 50 && random() < 0.1) {
 
                 let tooCloseToTownOrPlayer = false;
 
