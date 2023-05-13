@@ -9,6 +9,8 @@ class Shout {
 
         this.lifeTime = 0;
         this.visible = false;
+
+        this.pulseOffset = random(360);
     }
 
     update() {
@@ -54,15 +56,16 @@ class Shout {
         if (this.visible) return;
 
         let x, y;
+        let radius = this.radius + sin((frameCount+this.pulseOffset)*8)*4;
 
         if (this.target == -1) {
             x = this.x;
             y = this.y;
-            image(deathShoutImage, x, y, this.radius, this.radius);
+            image(deathShoutImage, x, y, radius, radius);
         } else {
             x = this.target.x;
             y = this.target.y;
-            image(beetleShoutImage, x, y, this.radius, this.radius);
+            image(beetleShoutImage, x, y, radius, radius);
         }
     }
 }

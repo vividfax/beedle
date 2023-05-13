@@ -31,6 +31,8 @@ class Player {
             food: 0,
             gems: 0,
         }
+
+        this.bigBadDeathWitness = 0;
     }
 
     update() {

@@ -193,7 +193,7 @@ function update() {
     }
 
     for (let i = 0; i < targets.length; i++) {
-        targets[i].radius = (20-i)/20*9;
+        targets[i].radius = (20-int(i/beedles.length))/20*9;
         if (targets[i].radius < 3) targets[i].radius = 3;
         targets[i].update();
     }
@@ -219,6 +219,10 @@ function display() {
         push();
         scale(-1, 1);
         image(compendiumPaperLayer, -(-inventoryWidth/2 + width/size/2), height/size/2, width/size-inventoryWidth, height/size);
+        stroke("#333");
+        strokeWeight(1);
+        noFill();
+        rect(0, 0, width/size, height/size);
         image(mapCutoutLayer, -(-inventoryWidth/2 + width/size/2), height/size/2);
         pop();
 
@@ -273,6 +277,10 @@ function display() {
         beedles[i].display();
     }
 
+    stroke("#333");
+    strokeWeight(1);
+    noFill();
+    rect(0, 0, width/size, height/size);
     image(mapCutoutLayer, -inventoryWidth/2 + width/size/2, height/size/2);
     displayInventory();
     displayPopup();
@@ -288,6 +296,17 @@ function hoverOverInventory() {
 }
 
 function mousePressed() {
+
+    for (let i = 0; i < beedles.length; i++) {
+        for (let j = 0; j < beedles[i].targets.length; j++) {
+            if (beedles[i].targets[j].clicked()) {
+
+                let index = beedles[i].targets.indexOf(beedles[i].targets[j]);
+                if (index != -1) beedles[i].targets.splice(index, 1);
+                return;
+            }
+        }
+    }
 
     let edgePadding = 30;
 
@@ -534,7 +553,7 @@ function displayInventory() {
 
     fill("#333");
     noStroke();
-    rect(-10-1, -10, inventoryWidth+1, height);
+    rect(-10, -10, inventoryWidth, height);
 
     textAlign(LEFT);
     textSize(20);
@@ -604,6 +623,7 @@ function moveBeedles() {
 
         beedles[closestBeedleIndex].targets.push(targets[i]);
         targets[i].assigned = true;
+        targets[i].assignedTo = this;
     }
 }
 

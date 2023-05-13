@@ -46,7 +46,17 @@ class Monster {
                     this.dead = true;
                     loots.push(new Loot(this.x, this.y, "bones"));
                     if (adventurers[i].inventory.gems < 5) adventurers[i].inventory.gems++;
-                    if (this.bigBad) bigBadCount--;
+                    if (this.bigBad) {
+                        bigBadCount--;
+
+                        for (let j = 0; j < beedles.length; j++) {
+                            let distance = dist(beedles[j].x, beedles[j].y, this.x, this.y);
+                            if (distance < beedleVisionRadius) {
+                                player.bigBadDeathWitness++;
+                                break;
+                            }
+                        }
+                    }
                     this.init();
                     return;
                 }
