@@ -79,7 +79,7 @@ class Beedle {
                 let keys = Object.keys(player.inventory);
                 let randomResource = keys[Math.floor(Math.random() * keys.length)];
                 if (player.inventory[randomResource.toString()] > 0) {
-                    if (randomResource == "gems" && this.tradingWith.inventory[randomResource.toString()] >= 5) {
+                    if (randomResource == "gems") {
                         // do nothing
                     } else if (this.tradingWith.inventory[randomResource.toString()] >= maxResourceCarry) {
                         // do nothing
