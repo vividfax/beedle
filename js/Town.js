@@ -45,6 +45,8 @@ class Town {
 
         this.visible = true;
         this.discovered = false;
+
+        this.lastCaravanSent = -1;
     }
 
     update() {
@@ -83,10 +85,15 @@ class Town {
         this.radius = this.resourceCapacity/2 + 35;
         if (this.visualRadius < this.radius) this.visualRadius += 0.01;
 
+        this.lastCaravanSent++;
+
         if (this.resourceCapacity >= 100 && towns.length < 5 && caravans.length == 0 && this.inventory.wood >= this.resourceCapacity && this.inventory.stone >= this.resourceCapacity) {
-            this.inventory.stone = 0;
-            this.inventory.wood = 0;
-            this.birthCaravan();
+            if (this.lastCaravanSent > 60*30) {
+                this.inventory.stone = 0;
+                this.inventory.wood = 0;
+                this.birthCaravan();
+                this.lastCaravanSent = 0;
+            }
         }
 
         this.hover();
