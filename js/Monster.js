@@ -20,13 +20,14 @@ class Monster {
             bigBadCount++;
         }
 
-        this.radius = this.bigBad ? 40 : 15;
+        this.radius = this.bigBad ? 45 : 15;
         this.speed = 0.8 - this.radius/100;
         this.velocityX = random(-this.speed, this.speed);
         this.velocityY = random(-this.speed, this.speed);
 
         this.maxHitpoints = this.radius*2;
         this.hitpoints = this.maxHitpoints;
+        this.healPoints = 0;
         this.dead = false;
         this.visible = false;
     }
@@ -73,8 +74,14 @@ class Monster {
         if (!inFight) {
             this.move();
             this.eat();
-            // if (this.hitpoints < this.maxHitpoints) this.hitpoints += 0.1;
+            if (this.healPoints > 0) {
+                this.healPoints -= 0.1;
+                this.hitpoints += 0.1;
+            }
         }
+
+        if (this.hitpoints > this.maxHitpoints) this.hitpoints = this.maxHitpoints;
+
     }
 
     move() {
@@ -111,7 +118,7 @@ class Monster {
             if (!this.collide(loots[i])) continue;
 
             if (loots[i].type == "food") {
-                this.hitpoints++;
+                this.healPoints += 5;
                 loots[i].destruct();
                 return true;
             }
@@ -142,9 +149,18 @@ class Monster {
 
         push();
 
-        stroke(0, 0, 0, opacity/2);
+        noStroke();
         fill(50, opacity);
-        ellipse(this.x, this.y, this.radius);
+        ellipse(this.x, this.y, this.radius+4);
+
+        noFill();
+        strokeWeight(1.5);
+        let healthColour = color("#95423A");
+        healthColour.setAlpha(opacity);
+        stroke(healthColour);
+        let degree = this.hitpoints/this.maxHitpoints*360;
+        if (degree >= 360) ellipse(this.x, this.y, this.radius);
+        else arc(this.x, this.y, this.radius, this.radius, -90+(360-degree), -90);
 
         pop();
     }

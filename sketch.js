@@ -54,7 +54,7 @@ let beetleUnlocked = false;
 
 let size;
 
-let beedleVisionRadius = 150;
+let beedleVisionRadius = 1500;
 
 let tradingPortraitAventurer;
 let tradingPortraitSize = 0;

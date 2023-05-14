@@ -34,8 +34,9 @@ class Adventurer {
 
         this.passingThroughTown = false;
 
-        this.maxHitpoints = 60;
+        this.maxHitpoints = 40;
         this.hitpoints = random(this.maxHitpoints/2, this.maxHitpoints);
+        this.healPoints = 0;
         this.dead = false;
         this.visible = false;
 
@@ -142,7 +143,7 @@ class Adventurer {
                     wildBeetleCount--;
                 }
 
-                if (this.hitpoints < this.maxHitpoints) this.hitpoints = this.maxHitpoints;
+                if (this.hitpoints < this.maxHitpoints) this.hitpoints += 0.5;
             }
         }
 
@@ -175,7 +176,7 @@ class Adventurer {
                         beedles[i].tradingInvincible = true;
                         beedles[i].tradingWith = this;
                     }
-                    if (!this.trading && beedles[i].tradingWith == this) this.trading = true;
+                    if (beedles[i].trading && beedles[i].tradingWith == this) this.trading = true;
                     break;
                 }
             }
@@ -206,10 +207,15 @@ class Adventurer {
                 this.headingHome = false;
             }
             this.move();
-            // if (this.hitpoints < this.maxHitpoints) this.hitpoints += 0.5;
+            if (this.hitpoints < this.maxHitpoints) this.hitpoints += 0.02;
             this.harvest();
             this.collect();
             this.eat();
+
+            if (this.healPoints > 0) {
+                this.healPoints -= 0.1;
+                this.hitpoints += 0.1;
+            }
 
             if (!this.carryingBeetle && !this.headingHome && wildBeetleCount < 1 && beetleUnlocked && score-buyingBeetleDebt >= 50 && random() < 0.1) {
 
@@ -238,6 +244,8 @@ class Adventurer {
                 }
             }
         }
+
+        if (this.hitpoints > this.maxHitpoints) this.hitpoints = this.maxHitpoints;
 
         this.hover();
     }
@@ -377,7 +385,7 @@ class Adventurer {
     eat() {
 
         if (this.hitpoints < this.maxHitpoints && this.inventory.food > 0) {
-            this.hitpoints += 3;
+            this.healPoints += 5;
             this.inventory.food--;
             return true;
         }
@@ -449,6 +457,10 @@ class Adventurer {
 
         push();
 
+        noStroke();
+        fill(255, opacity);
+        ellipse(this.x, this.y, this.radius+4);
+
         if (this.carryingBeetle) {
             let borderWeight = sin(frameCount*3)*3 + 4;
             let colour = color("#FFE600");
@@ -458,7 +470,21 @@ class Adventurer {
             ellipse(this.x, this.y, this.radius+borderWeight);
         }
 
+        noStroke();
+        fill(255, 255, 255, opacity);
+        ellipse(this.x, this.y, this.radius);
         image(adventurerTints[this.number][int(opacity/10)], this.x, this.y, this.radius, this.radius);
+
+        noFill();
+        strokeWeight(1.5);
+        stroke(0, 0, 0, opacity);
+        ellipse(this.x, this.y, this.radius);
+        let healthColour = color("#D78471");
+        healthColour.setAlpha(opacity);
+        stroke(healthColour);
+        let degree = this.hitpoints/this.maxHitpoints*360;
+        if (degree >= 360) ellipse(this.x, this.y, this.radius);
+        else arc(this.x, this.y, this.radius, this.radius, -90+(360-degree), -90);
 
         pop();
     }

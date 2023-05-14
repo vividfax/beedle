@@ -59,6 +59,7 @@ class Animal {
                 if (this.hitpoints < 0) {
                     this.dead = true;
                     this.init();
+                    monsters[i].healPoints += 5;
                     return;
                 }
             }
