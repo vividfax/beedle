@@ -6,7 +6,7 @@ class Mountain {
         this.x = x;
         this.y = y;
 
-        this.radius = random(50, 100);
+        this.radius = 30;
     }
 
     update() {
@@ -16,7 +16,7 @@ class Mountain {
     display() {
 
         // noStroke();
-        // fill("#aaa");
+        // fill(100, 100);
         // ellipse(this.x, this.y, this.radius);
     }
 }

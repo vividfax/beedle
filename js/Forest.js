@@ -6,7 +6,7 @@ class Forest {
         this.x = x;
         this.y = y;
 
-        this.radius = random(50, 100);
+        this.radius = 30;
     }
 
     update() {
@@ -16,7 +16,7 @@ class Forest {
     display() {
 
         // noStroke();
-        // fill("#bbb");
+        // fill(200, 100);
         // ellipse(this.x, this.y, this.radius);
     }
 }

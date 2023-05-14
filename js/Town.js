@@ -7,7 +7,7 @@ class Town {
         this.townNumber = townNumber;
 
         this.name = this.createName();
-        if (townNames.includes(this.name)) this.name = this.createName();
+        if (townNames.includes(this.name) || commonWords.words.includes(this.name.toLowerCase())) this.name = this.createName();
         townNames.push(this.name);
 
         this.x = x;

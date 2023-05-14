@@ -35,12 +35,13 @@ class Adventurer {
         this.passingThroughTown = false;
 
         this.maxHitpoints = 40;
-        this.hitpoints = random(this.maxHitpoints/2, this.maxHitpoints);
+        this.hitpoints = this.maxHitpoints;
         this.healPoints = 0;
         this.dead = false;
         this.visible = false;
 
         this.timeBetweenDrops = 0;
+        this.timeBetweenGemDrops = 0;
         this.mined = false;
         this.fought = false;
 
@@ -68,6 +69,11 @@ class Adventurer {
         this.trading = false;
 
         this.lifeTime = 0;
+
+        this.charging = false;
+        this.chargeToward = -1;
+        this.chargeBreak = false;
+        this.chargeTimer = 0;
     }
 
     update() {
@@ -152,10 +158,16 @@ class Adventurer {
             }
         }
 
+        if (this.chargeBreak) this.chargeTimer++;
+        if (this.chargeBreak && this.chargeTimer > 60*2) this.chargeBreak = false;
+
         for (let i = 0; i < animals.length; i++) {
             if (this.collide(animals[i])) {
                 if (!this.inFight) this.inFight = true;
                 break;
+            } else if (!this.chargeBreak && !this.charging && !this.headingHome && dist(this.x, this.y, animals[i].x, animals[i].y) < this.radius*2 && this.hitpoints+this.healPoints < this.maxHitpoints) {
+                this.charging = true;
+                this.chargeToward = {x: animals[i].x, y: animals[i].y};
             }
         }
 
@@ -189,7 +201,7 @@ class Adventurer {
             return;
         }
 
-        if (!this.dead && !this.inFight && !this.trading) {
+        if (!this.dead && !this.inFight && !this.trading && !this.charging) {
 
             if (!this.headingHome && !this.passingThroughTown && this.inventory.gems >= 5) {
                 this.headingHome = true;
@@ -234,6 +246,10 @@ class Adventurer {
                     shouts.push(new Shout(0, 0, this));
                 }
             }
+        } else if (this.charging && !this.inFight) {
+            this.move();
+            if (this.hitpoints < this.maxHitpoints) this.hitpoints += 0.01;
+            this.eat();
         }
 
         if (this.hitpoints > this.maxHitpoints) this.hitpoints = this.maxHitpoints;
@@ -253,6 +269,29 @@ class Adventurer {
             this.x += direction.x;
             this.y += direction.y;
 
+            return;
+        } else if (this.charging) {
+
+            let target = this.chargeToward;
+
+            this.velocity = 1;
+
+            let pos = createVector(this.x, this.y);
+            let targetPos = createVector(target.x - this.x, target.y - this.y);
+
+            if (dist(target.x, target.y, this.x, this.y) > 1) {
+
+                targetPos.normalize().mult(this.velocity);
+                pos.add(targetPos);
+
+                this.x = pos.x;
+                this.y = pos.y;
+            } else {
+                this.charging = false;
+                this.chargeToward = -1;
+                this.chargeBreak = true;
+                this.chargeTimer = 0;
+            }
             return;
         }
 
@@ -308,13 +347,22 @@ class Adventurer {
 
     harvest() {
 
+        let timerTick = false;
+        let gemTimerTick = false;
+
         for (let i = 0; i < mountains.length; i++) {
 
             if (this.collide(mountains[i])) {
                 if (!this.mined) this.mined = true;
-                this.timeBetweenDrops++;
+                timerTick = true;
+                gemTimerTick = true;
 
-                if (this.timeBetweenDrops > 200) {
+                if (this.timeBetweenGemDrops > 60*4) {
+                    if (this.inventory.gems < 5) this.inventory.gems++;
+                    this.timeBetweenGemDrops = 0;
+                    break;
+                }
+                if (this.timeBetweenDrops > mountains.length/4) {
 
                     if (this.inventory.stone < maxResourceCarry) {
                         this.inventory.stone++;
@@ -323,9 +371,8 @@ class Adventurer {
                         loots.push(new Loot(this.x + random(-radius, radius), this.y + random(-radius, radius), "stone"));
                     }
 
-                    if (this.inventory.gems < 5 && random() < 0.2) this.inventory.gems++;
-
                     this.timeBetweenDrops = 0;
+                    break;
                 }
             }
         }
@@ -333,9 +380,9 @@ class Adventurer {
         for (let i = 0; i < forests.length; i++) {
 
             if (this.collide(forests[i])) {
-                this.timeBetweenDrops++;
+                timerTick = true;
 
-                if (this.timeBetweenDrops > 200) {
+                if (this.timeBetweenDrops > forests.length/4) {
 
                     if (this.inventory.wood < maxResourceCarry) {
                         this.inventory.wood++;
@@ -345,10 +392,13 @@ class Adventurer {
                     }
 
                     this.timeBetweenDrops = 0;
+                    break;
                 }
             }
-
         }
+
+        if (timerTick) this.timeBetweenDrops++;
+        if (gemTimerTick) this.timeBetweenGemDrops++;
     }
 
     collect() {

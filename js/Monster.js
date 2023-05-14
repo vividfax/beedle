@@ -30,17 +30,21 @@ class Monster {
         this.healPoints = 0;
         this.dead = false;
         this.visible = false;
+
+        this.inFight = false;
+        this.charging = false;
+        this.chargeToward = -1;
     }
 
     update() {
 
         if (this.dead) return;
 
-        let inFight = false;
+        this.inFight = false;
 
         for (let i = 0; i < adventurers.length; i++) {
             if (this.collide(adventurers[i])) {
-                if (!inFight) inFight = true;
+                if (!this.inFight) this.inFight = true;
                 adventurers[i].hitpoints--;
 
                 if (this.hitpoints < 0) {
@@ -61,19 +65,22 @@ class Monster {
                     this.init();
                     return;
                 }
+            } else if (!this.charging && dist(this.x, this.y, adventurers[i].x, adventurers[i].y) < this.radius*3) {
+                this.charging = true;
+                this.chargeToward = {x: adventurers[i].x, y: adventurers[i].y};
             }
         }
 
         for (let i = 0; i < animals.length; i++) {
             if (this.collide(animals[i])) {
-                if (!inFight) inFight = true;
+                if (!this.inFight) this.inFight = true;
                 break;
             }
         }
 
         for (let i = 0; i < caravans.length; i++) {
             if (this.collide(caravans[i])) {
-                if (!inFight) inFight = true;
+                if (!this.inFight) this.inFight = true;
                 this.hitpoints--;
 
                 if (this.hitpoints <= 0) {
@@ -85,7 +92,9 @@ class Monster {
             }
         }
 
-        if (!inFight) {
+        if (this.charging && !this.inFight) {
+            this.move();
+        } else if (!this.inFight) {
             this.move();
             this.eat();
             if (this.healPoints > 0) {
@@ -95,10 +104,33 @@ class Monster {
         }
 
         if (this.hitpoints > this.maxHitpoints) this.hitpoints = this.maxHitpoints;
-
     }
 
     move() {
+
+        if (this.charging && !this.inFight) {
+
+            let target = this.chargeToward;
+
+            this.velocity = 1;
+
+            let pos = createVector(this.x, this.y);
+            let targetPos = createVector(target.x - this.x, target.y - this.y);
+
+            if (dist(target.x, target.y, this.x, this.y) > 1) {
+
+                targetPos.normalize().mult(this.velocity);
+                pos.add(targetPos);
+
+                this.x = pos.x;
+                this.y = pos.y;
+            } else {
+                this.charging = false;
+                this.chargeToward = -1;
+            }
+
+            return;
+        }
 
         let pos = createVector(this.x, this.y);
 

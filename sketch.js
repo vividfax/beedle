@@ -66,7 +66,7 @@ let tradingPortraitSize = 0;
 // https://coolors.co/ffdada-c4ffd1-c9e5ff-cac4ff
 let beedleLineColours = ["#FF96EE", "#FFABAB", "#FFBC74", "#7AF587", "#7DF8D7", "#88C5FF", "#9580FF", "#BC88FF", "#FFDADA", "#C4FFD1", "#C9E5FF", "#CAC4FF"];
 
-let guideWords;
+let guideWords, commonWords;
 
 function preload() {
 
@@ -93,6 +93,7 @@ function preload() {
     targetCrossFont = loadFont("./fonts/ArchitectsDaughter-Regular.ttf");
 
     guideWords = loadJSON("./json/guide-words.json");
+    commonWords = loadJSON("./json/common-words.json");
 }
 
 function setup() {
@@ -122,7 +123,11 @@ function setup() {
     player = new Player(width/size/2-inventoryWidth/2, height/size/2);
 
     for (let i = 0; i < 1; i++) {
-        towns.push(new Town(i));
+        let w = width/size-inventoryWidth;
+        let h = height/size;
+        let x = random(w/3, w/3*2);
+        let y = random(h/3, h/3*2);
+        towns.push(new Town(i, x, y));
     }
 
     for (let i = 0; i < 1; i++) {
@@ -131,6 +136,7 @@ function setup() {
 
     for (let i = 0; i < 3; i++) {
         adventurers.push(new Adventurer(i));
+        adventurers[i].init(false);
     }
 
     for (let i = 0; i < 12; i++) {
@@ -532,14 +538,17 @@ function createBackground() {
 
 function createTerrain() {
 
-    for (let i = 0; i < width-inventoryWidth; i+=50) {
-        for (let j = 0; j < height; j+=50) {
+    let edgePadding = 60;
+    let spacing = 30;
+
+    for (let i = edgePadding; i <= width/size-inventoryWidth-edgePadding; i+=spacing) {
+        for (let j = edgePadding; j <= height/size-edgePadding; j+=spacing) {
 
             let perlin = noise(i*0.005, j*0.005)
 
-            if (perlin > 0.6) {
+            if (perlin > 0.55) {
                 mountains.push(new Mountain(i, j));
-            } else if (perlin > 0.4 && perlin < 0.45) {
+            } else if (perlin > 0.35 && perlin < 0.5) {
                 forests.push(new Forest(i, j));
             }
         }
