@@ -166,10 +166,6 @@ function update() {
 
     player.update();
 
-    for (let i = 0; i < adventurers.length; i++) {
-        adventurers[i].update();
-    }
-
     for (let i = 0; i < monsters.length; i++) {
         monsters[i].update();
     }
@@ -186,6 +182,10 @@ function update() {
         if (towns[i].visiting) {
             player.velocity = 1;
         }
+    }
+
+    for (let i = 0; i < adventurers.length; i++) {
+        adventurers[i].update();
     }
 
     for (let i = 0; i < loots.length; i++) {
