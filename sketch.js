@@ -141,6 +141,8 @@ function setup() {
         animals.push(new Animal());
     }
 
+    // console.log(int(monsters.length/6)-1);
+
     compendium = new Compendium();
 
     createBackground();

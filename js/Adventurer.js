@@ -96,7 +96,7 @@ class Adventurer {
                     unassignWaypoints();
                     if (adventurers.length < 12) adventurers.push(new Adventurer(adventurers.length));
                     monsters.push(new Monster());
-                    bigBadMax = int(monsters.length/7)-1;
+                    bigBadMax = int(monsters.length/6)-1;
                     break;
                 }
             }
