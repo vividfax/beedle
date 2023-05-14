@@ -39,6 +39,7 @@ class BeetleGen {
         this.wingsVectors = [random(180, 250), random(180, 210)];
         this.bodyVectors = [random(100, 140), random(250, 280), random(150, 180), random(180, 220)];
 
+        this.coloursUsed = [];
         this.createPattern(index);
         this.createWingShape();
 
@@ -66,7 +67,7 @@ class BeetleGen {
         this.appearPos = this.appearPos.setHeading(random(360));
         this.appearPos = this.appearPos.mult(500);
 
-        this.confetti = new Confetti(0, 0, this.palette, this.radius);
+        this.confetti = new Confetti(0, 0, this.coloursUsed, this.radius);
     }
 
     update() {
@@ -198,6 +199,9 @@ class BeetleGen {
         } else if (chosenPattern == "stripesH") {
             this.createStripes(false);
         }
+
+        if (!this.coloursUsed.includes(this.bodyColour)) !this.coloursUsed.push(this.bodyColour);
+        if (!this.coloursUsed.includes(this.legColour)) !this.coloursUsed.push(this.legColour);
     }
 
     createCircles() {
@@ -221,6 +225,10 @@ class BeetleGen {
             this.pattern.fill(this.bodyColour);
             this.pattern.ellipse(random(w), random(h), random(4/6, 15/6));
         }
+
+        if (!this.coloursUsed.includes(this.palette.light)) !this.coloursUsed.push(this.palette.light);
+        if (!this.coloursUsed.includes(this.palette.dark)) !this.coloursUsed.push(this.palette.dark);
+        if (!this.coloursUsed.includes(this.palette.mid)) !this.coloursUsed.push(this.palette.mid);
     }
 
     createCirclePack() {
@@ -248,6 +256,10 @@ class BeetleGen {
                 if (i == int(200/6)) circlePackCircles[j].display();
             }
         }
+
+        if (!this.coloursUsed.includes(this.palette.mid)) !this.coloursUsed.push(this.palette.mid);
+        if (!this.coloursUsed.includes(this.palette.dark)) !this.coloursUsed.push(this.palette.dark);
+        if (!this.coloursUsed.includes(this.palette.light)) !this.coloursUsed.push(this.palette.light);
     }
 
     createStripes(vertical) {
@@ -262,7 +274,7 @@ class BeetleGen {
 
             for (let i = 0; i <= beetlePatternSize; i+=beetlePatternSize/stripeCount) {
                 for (let j = 0; j <= beetlePatternSize; j+=10/6) {
-                    this.pattern.fill(this.palette.white);
+                    this.pattern.fill(this.palette.light);
                     this.pattern.ellipse(i+random(-2, 2)/6, j+random(-2, 2)/6, random(stripeThickness, stripeThickness+50/6));
                 }
             }
@@ -280,7 +292,7 @@ class BeetleGen {
 
             for (let i = 0; i <= beetlePatternSize; i+=30/6) {
                 for (let j = 0; j <= beetlePatternSize; j+=beetlePatternSize/stripeCount) {
-                    this.pattern.fill(this.palette.white);
+                    this.pattern.fill(this.palette.light);
                     this.pattern.ellipse(i+random(-2, 2)/6, j+random(-2, 2)/6, random(stripeThickness, stripeThickness+50/6));
                 }
             }
@@ -292,6 +304,10 @@ class BeetleGen {
                 }
             }
         }
+
+        if (!this.coloursUsed.includes(this.palette.mid)) !this.coloursUsed.push(this.palette.mid);
+        if (!this.coloursUsed.includes(this.palette.dark)) !this.coloursUsed.push(this.palette.dark);
+        if (!this.coloursUsed.includes(this.palette.light)) !this.coloursUsed.push(this.palette.light);
     }
 
     createWingShape() {
@@ -482,7 +498,7 @@ class Confetti {
 
         for (let i = 0; i < this.confettiNumber; i++) {
 
-            let colour = random([palette.mid, palette.dark, palette.black]);
+            let colour = random(palette);
 
             this.confetti.push({
                 pos: this.randomPos(),
