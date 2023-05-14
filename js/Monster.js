@@ -70,13 +70,6 @@ class Monster {
             }
         }
 
-        for (let i = 0; i < beedles.length; i++) {
-            if (this.collide(beedles[i])) {
-                if (!inFight) inFight = true;
-                break;
-            }
-        }
-
         if (!inFight) {
             this.move();
             this.eat();
