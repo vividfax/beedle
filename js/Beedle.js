@@ -44,9 +44,9 @@ class Beedle {
                 // }
 
                 for (let [key, value] of Object.entries(player.inventory)) {
-                    if (value > 0 && (towns[i].inventory[key.toString()] < 100 || key.toString() == "gems")) {
+                    if (value > 0 && (towns[i].inventory[key.toString()] < towns[i].resourceCapacity || key.toString() == "gems")) {
 
-                        towns[i].inventory[key.toString()] ++;
+                        towns[i].inventory[key.toString()]++;
                         score++;
                         player.inventory[key.toString()]--;
                         player.lifetimeDelivery[key.toString()]++;

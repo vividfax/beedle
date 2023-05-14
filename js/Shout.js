@@ -39,7 +39,7 @@ class Shout {
             } else if (this.target != -1 && distance < beedleVisionRadius) {
                 this.visible = true;
                 break;
-            } else if (this.target != -1) {
+            } else {
                 this.visible = false;
             }
         }

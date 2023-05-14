@@ -8,6 +8,7 @@ let mountains = [];
 let forests = [];
 let animals = [];
 let shouts = [];
+let caravans = [];
 
 let score = 0;
 let buyingBeetleDebt = 0;
@@ -31,6 +32,8 @@ let coinImage;
 let playerImage;
 let deathShoutImage;
 let beetleShoutImage;
+let caravanImage;
+let caravanTints = [];
 
 let popupSelected;
 let popupBoxLayer;
@@ -81,8 +84,9 @@ function preload() {
     beetleImage = loadImage("./images/beetle.png");
     castleImage = loadImage("./images/castle.png");
     playerImage = loadImage("./images/beedle.png");
-    deathShoutImage = loadImage("./images/death-shout.png")
-    beetleShoutImage = loadImage("./images/beetle-shout.png")
+    deathShoutImage = loadImage("./images/death-shout.png");
+    beetleShoutImage = loadImage("./images/beetle-shout.png");
+    caravanImage = loadImage("./images/wagon.png");
 
     beetleDescriptionFont = loadFont("./fonts/Allura-Regular.ttf");
     cartoonFont = loadFont("./fonts/ConcertOne-Regular.ttf");
@@ -118,18 +122,18 @@ function setup() {
     player = new Player(width/size/2-inventoryWidth/2, height/size/2);
 
     for (let i = 0; i < 1; i++) {
-        beedles.push(new Beedle(width/size/2-inventoryWidth/2, height/size/2, i));
-    }
-
-    for (let i = 0; i < 3; i++) {
         towns.push(new Town(i));
     }
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 1; i++) {
+        beedles.push(new Beedle(towns[0].x, towns[0].y, i));
+    }
+
+    for (let i = 0; i < 3; i++) {
         adventurers.push(new Adventurer(i));
     }
 
-    for (let i = 0; i < 17; i++) {
+    for (let i = 0; i < 12; i++) {
         monsters.push(new Monster());
     }
 
@@ -146,7 +150,7 @@ function setup() {
 
     createPopupBox();
 
-    createAdventurerImageTints();
+    createImageTints();
 }
 
 function draw() {
@@ -176,6 +180,10 @@ function update() {
         animals[i].update();
     }
 
+    for (let i = 0; i < adventurers.length; i++) {
+        adventurers[i].update();
+    }
+
     for (let i = 0; i < towns.length; i++) {
 
         towns[i].update();
@@ -186,8 +194,8 @@ function update() {
         }
     }
 
-    for (let i = 0; i < adventurers.length; i++) {
-        adventurers[i].update();
+    for (let i = 0; i < caravans.length; i++) {
+        caravans[i].update();
     }
 
     for (let i = 0; i < loots.length; i++) {
@@ -279,6 +287,10 @@ function display() {
 
     for (let i = 0; i < animals.length; i++) {
         animals[i].display();
+    }
+
+    for (let i = 0; i < caravans.length; i++) {
+        caravans[i].display();
     }
 
     for (let i = 0; i < monsters.length; i++) {
@@ -430,11 +442,11 @@ function displayPopup() {
     for (let [key, value] of Object.entries(popupSelected.inventory)) {
 
         let txt = key.toString() + ": " + value;
-        if (popupSelected instanceof Town) txt += "/100";
+        if (popupSelected instanceof Town) txt += "/" + popupSelected.resourceCapacity;
         else if (popupSelected instanceof Adventurer && key.toString() != "gems") txt += "/8";
         else if (popupSelected instanceof Adventurer && key.toString() == "gems") txt += "/5";
 
-        if (value >= 100) {
+        if (popupSelected instanceof Town && value >= popupSelected.resourceCapacity) {
             stroke(150, 0, 0, 200);
             fill(150, 0, 0, 200);
         } else {
@@ -741,7 +753,7 @@ function unassignWaypoints() {
     }
 }
 
-function createAdventurerImageTints() {
+function createImageTints() {
 
     let graphicsSize = adventurers[0].radius;
 
@@ -749,7 +761,7 @@ function createAdventurerImageTints() {
 
         let arr = [];
 
-        for (let j = 0; j < 256; j+=10) {
+        for (let j = 0; j < 256; j += 10) {
             let graphics = createGraphics(graphicsSize, graphicsSize);
             graphics.tint(255, j);
             graphics.image(adventurerImages[i], 0, 0, graphicsSize, graphicsSize);
@@ -757,5 +769,14 @@ function createAdventurerImageTints() {
         }
 
         adventurerTints.push(arr);
+    }
+
+    graphicsSize = 40*1.5;
+
+    for (let i = 0; i < 256; i += 10) {
+        let graphics = createGraphics(graphicsSize, graphicsSize);
+        graphics.tint(255, i);
+        graphics.image(caravanImage, 0, 0, graphicsSize, graphicsSize);
+        caravanTints.push(graphics);
     }
 }

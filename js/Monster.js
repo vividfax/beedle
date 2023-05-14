@@ -1,5 +1,5 @@
 let bigBadCount = 0;
-let bigBadMax = 3;
+let bigBadMax = 0;
 
 class Monster {
 
@@ -71,6 +71,20 @@ class Monster {
             }
         }
 
+        for (let i = 0; i < caravans.length; i++) {
+            if (this.collide(caravans[i])) {
+                if (!inFight) inFight = true;
+                this.hitpoints--;
+
+                if (this.hitpoints <= 0) {
+                    this.dead = true;
+                    loots.push(new Loot(this.x, this.y, "bones"));
+                    this.init();
+                    return;
+                }
+            }
+        }
+
         if (!inFight) {
             this.move();
             this.eat();
@@ -118,7 +132,7 @@ class Monster {
             if (!this.collide(loots[i])) continue;
 
             if (loots[i].type == "food") {
-                this.healPoints += 5;
+                this.healPoints += 3;
                 loots[i].destruct();
                 return true;
             }

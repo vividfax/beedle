@@ -66,6 +66,8 @@ class Adventurer {
 
         this.inFight = false;
         this.trading = false;
+
+        this.lifeTime = 0;
     }
 
     update() {
@@ -75,19 +77,6 @@ class Adventurer {
         if (this.velocity < 1) {
             this.velocity += 0.001;
         }
-
-        // for (let i = 0; i < loots.length; i++) {
-        //     if (this.checkProximity(loots[i].x, loots[i].y, this.radius/2 + loots[i].radius/2)) {
-
-        //         this.isCarrying = true;
-        //         loots[i].respawn();
-
-        //         if (!this.isRare && random(50) < 1 && rareCount < maxRare) {
-        //             this.isRare = true;
-        //             rareCount++;
-        //         }
-        //     }
-        // }
 
         if (this.carryingBeetle && !beetleUnlocked) {
             this.carryingBeetle = false;
@@ -106,6 +95,8 @@ class Adventurer {
                     beedles.push(new Beedle(beedles[i].x, beedles[i].y, beedles.length));
                     unassignWaypoints();
                     if (adventurers.length < 12) adventurers.push(new Adventurer(adventurers.length));
+                    monsters.push(new Monster());
+                    bigBadMax = int(monsters.length/7)-1;
                     break;
                 }
             }
@@ -168,7 +159,7 @@ class Adventurer {
             }
         }
 
-        if (!this.inFight) {
+        if (!this.inFight && this.lifeTime > 60*3) {
             for (let i = 0; i < beedles.length; i++) {
                 if (this.collide(beedles[i])) {
                     if (!beedles[i].tradingInvincible) {
@@ -187,13 +178,13 @@ class Adventurer {
             shouts.push(new Shout(this.x, this.y, -1));
             this.dropAll();
 
-            // for (let j = 0; j < beedles.length; j++) {
-            //     let distance = dist(beedles[j].x, beedles[j].y, this.x, this.y);
-            //     if (distance < beedleVisionRadius) {
-            //         player.epicBattleWitness++;
-            //         break;
-            //     }
-            // }
+            for (let j = 0; j < beedles.length; j++) {
+                let distance = dist(beedles[j].x, beedles[j].y, this.x, this.y);
+                if (distance < beedleVisionRadius) {
+                    player.epicBattleWitness++;
+                    break;
+                }
+            }
             this.init(false);
             return;
         }
@@ -207,7 +198,7 @@ class Adventurer {
                 this.headingHome = false;
             }
             this.move();
-            if (this.hitpoints < this.maxHitpoints) this.hitpoints += 0.02;
+            if (this.hitpoints < this.maxHitpoints) this.hitpoints += 0.01;
             this.harvest();
             this.collect();
             this.eat();
@@ -217,13 +208,13 @@ class Adventurer {
                 this.hitpoints += 0.1;
             }
 
-            if (!this.carryingBeetle && !this.headingHome && wildBeetleCount < 1 && beetleUnlocked && score-buyingBeetleDebt >= 50 && random() < 0.1) {
+            if (!this.carryingBeetle && !this.headingHome && wildBeetleCount == 0 && beetleUnlocked && score-buyingBeetleDebt >= 50) {
 
                 let tooCloseToTownOrPlayer = false;
 
                 for (let i = 0; i < towns.length; i++) {
                     let distance = dist(towns[i].x, towns[i].y, this.x, this.y);
-                    if (distance < 200) {
+                    if (distance < 100) {
                         tooCloseToTownOrPlayer = true;
                         break;
                     }
@@ -246,6 +237,7 @@ class Adventurer {
         }
 
         if (this.hitpoints > this.maxHitpoints) this.hitpoints = this.maxHitpoints;
+        this.lifeTime++;
 
         this.hover();
     }
@@ -331,7 +323,7 @@ class Adventurer {
                         loots.push(new Loot(this.x + random(-radius, radius), this.y + random(-radius, radius), "stone"));
                     }
 
-                    if (this.inventory.gems < 5 && random() < 0.1) this.inventory.gems++;
+                    if (this.inventory.gems < 5 && random() < 0.2) this.inventory.gems++;
 
                     this.timeBetweenDrops = 0;
                 }
@@ -385,7 +377,7 @@ class Adventurer {
     eat() {
 
         if (this.hitpoints < this.maxHitpoints && this.inventory.food > 0) {
-            this.healPoints += 5;
+            this.healPoints += 3;
             this.inventory.food--;
             return true;
         }

@@ -2,7 +2,7 @@ let townNames = [];
 
 class Town {
 
-    constructor(townNumber) {
+    constructor(townNumber, x, y) {
 
         this.townNumber = townNumber;
 
@@ -10,34 +10,54 @@ class Town {
         if (townNames.includes(this.name)) this.name = this.createName();
         townNames.push(this.name);
 
-        this.edgePadding = 200;
-        this.x = random(this.edgePadding, width/size-this.edgePadding-inventoryWidth);
-        this.y = random(this.edgePadding, height/size-this.edgePadding);
+        this.x = x;
+        this.y = y;
 
-        while (this.touchingAnotherTown()) {
+        if (x == undefined) {
+            this.edgePadding = 200;
             this.x = random(this.edgePadding, width/size-this.edgePadding-inventoryWidth);
             this.y = random(this.edgePadding, height/size-this.edgePadding);
+
+            while (this.touchingAnotherTown()) {
+                this.x = random(this.edgePadding, width/size-this.edgePadding-inventoryWidth);
+                this.y = random(this.edgePadding, height/size-this.edgePadding);
+            }
         }
 
         this.visiting = false;
         this.visited = false;
 
-        this.radius = 60;
-
         this.waitingForResource = false;
 
         this.inventory = {
-            stone: int(random(100)),
-            wood: int(random(100)),
-            bones: int(random(50)),
-            food: int(random(50)),
-            gems: int(random(25)),
+            stone: 0,
+            wood: 0,
+            bones: 0,
+            food: 0,
+            gems: 0,
         };
 
+        // let resourceSize = this.inventory.stone + this.inventory.wood;
+        // this.radius = 30 + resourceSize/200*60;
+        this.resourceCapacity = 10;
+        this.radius = this.resourceCapacity/2 + 35;
+        this.visualRadius = this.radius;
+
         this.visible = true;
+        this.discovered = false;
     }
 
     update() {
+
+        if (!this.discovered) {
+            for (let i = 0; i < beedles.length; i++) {
+                let distance = dist(beedles[i].x, beedles[i].y, this.x, this.y);
+                if (distance < beedleVisionRadius) {
+                    this.discovered = true;
+                    break;
+                }
+            }
+        }
 
         if (player.inventory[this.resource] > 0) {
             this.waitingForResource = true;
@@ -45,10 +65,28 @@ class Town {
             this.waitingForResource = false;
         }
 
-        if (frameCount % (60*3) == 1) {
+        if (frameCount % (60*4) == 1) {
+            if (this.inventory.gems > 0 && this.resourceCapacity < 100 && (this.inventory.stone >= this.resourceCapacity || this.inventory.wood >= this.resourceCapacity)) this.resourceCapacity++;
+
             for (let [key, value] of Object.entries(this.inventory)) {
-                if (value > 0) this.inventory[key.toString()]--;
+                if (value > 0) {
+                    this.inventory[key.toString()]--;
+                }
             }
+        }
+
+        // let stone = this.inventory.stone > 100 ? 100 : this.inventory.stone;
+        // let wood = this.inventory.wood > 100 ? 100 : this.inventory.wood;
+        // let resourceSize = stone + wood;
+        // this.radius = 30 + resourceSize/200*60;
+
+        this.radius = this.resourceCapacity/2 + 35;
+        if (this.visualRadius < this.radius) this.visualRadius += 0.01;
+
+        if (this.resourceCapacity >= 100 && towns.length < 5 && caravans.length == 0 && this.inventory.wood >= this.resourceCapacity && this.inventory.stone >= this.resourceCapacity) {
+            this.inventory.stone = 0;
+            this.inventory.wood = 0;
+            this.birthCaravan();
         }
 
         this.hover();
@@ -89,11 +127,6 @@ class Town {
         if(dist(mouseX/size, mouseY/size, this.x, this.y) < this.radius/2) popupSelected = this;
     }
 
-    display() {
-
-        image(castleImage, this.x, this.y, this.radius, this.radius);
-    }
-
     createName() {
 
         let prefix = random(guideWords.words);
@@ -101,13 +134,26 @@ class Town {
         let suffix = random(guideWords.words);
 
         let name = [prefix, mid, suffix].join("");
-        name = name.slice(0, int(random(3, 8)));
+        name = name.slice(0, int(random(4, 8)));
         name = name.replace(/^\w/, (c) => c.toUpperCase());
 
         return name;
     }
 
+    birthCaravan() {
+
+        caravans.push(new Caravan(this.x, this.y));
+    }
+
+    display() {
+
+        image(castleImage, this.x, this.y, this.visualRadius, this.visualRadius);
+    }
+
+
     displayName() {
+
+        if (!this.discovered) return;
 
         push();
 
@@ -117,7 +163,7 @@ class Town {
         textFont(beetleDescriptionFont);
         textSize(20);
         textLeading(20);
-        text(this.name, this.x, this.y+40)
+        text(this.name, this.x, this.y+this.visualRadius/2 + 10)
 
         pop();
     }

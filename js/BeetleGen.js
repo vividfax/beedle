@@ -61,13 +61,12 @@ class BeetleGen {
 
         this.appearing = false;
         this.appearingTimer = -100;
-        this.paintRotateOffset = random(360);
 
         this.appearPos = createVector(0.1, 0.1);
         this.appearPos = this.appearPos.setHeading(random(360));
         this.appearPos = this.appearPos.mult(500);
 
-        this.confetti = new Confetti(0, 0, this.coloursUsed, this.radius);
+        this.splat = new Splat(0, 0, this.coloursUsed, this.radius);
     }
 
     update() {
@@ -77,7 +76,7 @@ class BeetleGen {
         } else if (compendiumVisible && this.caught) {
             if (!this.appearing) this.appearing = true;
             this.appearingTimer++;
-            if (this.appearingTimer*5 < 255 && this.appearingTimer >= 0) this.confetti.update();
+            if (this.appearingTimer*5 < 255 && this.appearingTimer >= 0) this.splat.update();
             return;
         } else if (this.caught) {
             return;
@@ -128,7 +127,7 @@ class BeetleGen {
             image(this.transparentImage, 0, 0, this.radius, this.radius);
             if (this.appearingTimer*5 < 255) {
                 tint(255, this.appearingTimer*5);
-                this.confetti.display(-1+cos((frameCount+this.paintRotateOffset)*4)*3, -1-20+sin((frameCount+this.paintRotateOffset)*4)*3);
+                this.splat.display(-1, -1-20);
             }
             image(this.image, -1, -1, this.radius, this.radius);
             noTint();
@@ -264,7 +263,7 @@ class BeetleGen {
 
     createStripes(vertical) {
 
-        this.pattern.background(this.palette.dark);
+        this.pattern.background(this.palette.mid);
         this.pattern.noStroke();
 
         if (vertical) {
@@ -274,14 +273,14 @@ class BeetleGen {
 
             for (let i = 0; i <= beetlePatternSize; i+=beetlePatternSize/stripeCount) {
                 for (let j = 0; j <= beetlePatternSize; j+=10/6) {
-                    this.pattern.fill(this.palette.mid);
+                    this.pattern.fill(this.palette.light);
                     this.pattern.ellipse(i+random(-2, 2)/6, j+random(-2, 2)/6, random(stripeThickness, stripeThickness+50/6));
                 }
             }
 
             for (let i = 0; i <= beetlePatternSize; i+=beetlePatternSize/stripeCount) {
                 for (let j = 0; j <= beetlePatternSize; j+=10/6) {
-                    this.pattern.fill(this.palette.black);
+                    this.pattern.fill(this.palette.dark);
                     this.pattern.ellipse(i+random(-2, 2)/6, j+random(-2, 2)/6, random(stripeThickness/2, stripeThickness/2+20/6));
                 }
             }
@@ -292,22 +291,22 @@ class BeetleGen {
 
             for (let i = 0; i <= beetlePatternSize; i+=30/6) {
                 for (let j = 0; j <= beetlePatternSize; j+=beetlePatternSize/stripeCount) {
-                    this.pattern.fill(this.palette.mid);
+                    this.pattern.fill(this.palette.light);
                     this.pattern.ellipse(i+random(-2, 2)/6, j+random(-2, 2)/6, random(stripeThickness, stripeThickness+50/6));
                 }
             }
 
             for (let i = 0; i <= beetlePatternSize; i+=30/6) {
                 for (let j = 0; j <= beetlePatternSize; j+=beetlePatternSize/stripeCount) {
-                    this.pattern.fill(this.palette.black);
+                    this.pattern.fill(this.palette.dark);
                     this.pattern.ellipse(i+random(-2, 2)/6, j+random(-2, 2)/6, random(60/6));
                 }
             }
         }
 
         if (!this.coloursUsed.includes(this.palette.mid)) !this.coloursUsed.push(this.palette.mid);
-        if (!this.coloursUsed.includes(this.palette.dark)) !this.coloursUsed.push(this.palette.dark);
         if (!this.coloursUsed.includes(this.palette.light)) !this.coloursUsed.push(this.palette.light);
+        if (!this.coloursUsed.includes(this.palette.dark)) !this.coloursUsed.push(this.palette.dark);
     }
 
     createWingShape() {
@@ -485,7 +484,7 @@ class CirclePack {
     }
 }
 
-class Confetti {
+class Splat {
 
     constructor(x, y, palette, targetSize) {
 
@@ -493,20 +492,25 @@ class Confetti {
         this.y = y;
         this.targetSize = targetSize/5;
 
-        this.confettiNumber = 10;
-        this.confetti = [];
+        this.splatCount = palette.length;
+        this.splats = [];
+        this.paintRotateOffset = random(360);
+        this.palette = shuffle(palette);
 
-        for (let i = 0; i < this.confettiNumber; i++) {
+        let size = targetSize*0.4;
 
-            let colour = random(palette);
+        for (let i = 0; i < this.splatCount; i++) {
 
-            this.confetti.push({
-                pos: this.randomPos(),
-                size: random(targetSize*.1, targetSize*.4),
-                colour: colour,
+            this.splats.push({
+                size: size,
+                pos: this.randomPos(i),
+                colour: this.palette[i],
                 alpha: 255,
                 sizeSpeed: random(0.0005, 0.05),
+                sizePulseOffset: random(360),
             });
+
+            size *= 0.8;
         }
 
         this.done = false;
@@ -514,18 +518,18 @@ class Confetti {
 
     update() {
 
-        for (let i = 0; i < this.confettiNumber; i++) {
-            this.confetti[i].pos = this.confetti[i].pos.lerp(createVector(0, 0), 0.025);
-            this.confetti[i].size = lerp(this.confetti[i].size, 0, this.confetti[i].sizeSpeed);
-            this.confetti[i].alpha = lerp(this.confetti[i].alpha, 0, 0.08);
+        for (let i = 0; i < this.splatCount; i++) {
+            this.splats[i].pos = this.splats[i].pos.lerp(createVector(0, 0), 0.05);
+            this.splats[i].size = lerp(this.splats[i].size, 0, this.splats[i].sizeSpeed);
+            this.splats[i].alpha = lerp(this.splats[i].alpha, 0, 0.08);
         }
     }
 
-    randomPos() {
+    randomPos(index) {
 
         let pos = createVector(0.1, 0.1);
         pos = pos.setHeading(random(360));
-        pos = pos.mult(random(this.targetSize*5));
+        if (index != 0) pos = pos.mult(random(this.targetSize*3, this.targetSize*5));
         return pos;
     }
 
@@ -533,26 +537,27 @@ class Confetti {
 
         push();
         translate(x, y);
+        translate(cos((frameCount+this.paintRotateOffset)*4)*3, sin((frameCount+this.paintRotateOffset)*4)*3);
 
-        for (let i = 0; i < this.confettiNumber; i++) {
+        for (let i = 0; i < this.splatCount; i++) {
 
-            if (this.confetti[i].alpha-255+10 < 0) break;
+            if (this.splats[i].alpha-255+10 < 0) break;
 
             push();
-            translate(this.confetti[i].pos.x, this.confetti[i].pos.y+30);
-            fill(0, this.confetti[i].alpha-255+10);
-            ellipse(1, 1, this.confetti[i].size+5);
+            translate(this.splats[i].pos.x, this.splats[i].pos.y+30);
+            fill(0, this.splats[i].alpha-255+10);
+            ellipse(1, 1, this.splats[i].size+sin((frameCount+this.splats[i].sizePulseOffset)*2)*8+5);
             pop();
         }
 
-        for (let i = 0; i < this.confettiNumber; i++) {
+        for (let i = 0; i < this.splatCount; i++) {
 
             push();
-            translate(this.confetti[i].pos.x, this.confetti[i].pos.y+30);
-            let colour = color(this.confetti[i].colour);
-            colour.setAlpha(this.confetti[i].alpha);
+            translate(this.splats[i].pos.x, this.splats[i].pos.y+30);
+            let colour = color(this.splats[i].colour);
+            colour.setAlpha(this.splats[i].alpha);
             fill(colour);
-            ellipse(0, 0, this.confetti[i].size);
+            ellipse(0, 0, this.splats[i].size+sin((frameCount+this.splats[i].sizePulseOffset)*2)*8);
             pop();
         }
 
