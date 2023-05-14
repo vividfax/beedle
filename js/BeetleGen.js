@@ -264,7 +264,7 @@ class BeetleGen {
 
     createStripes(vertical) {
 
-        this.pattern.background(this.palette.mid);
+        this.pattern.background(this.palette.dark);
         this.pattern.noStroke();
 
         if (vertical) {
@@ -274,14 +274,14 @@ class BeetleGen {
 
             for (let i = 0; i <= beetlePatternSize; i+=beetlePatternSize/stripeCount) {
                 for (let j = 0; j <= beetlePatternSize; j+=10/6) {
-                    this.pattern.fill(this.palette.light);
+                    this.pattern.fill(this.palette.mid);
                     this.pattern.ellipse(i+random(-2, 2)/6, j+random(-2, 2)/6, random(stripeThickness, stripeThickness+50/6));
                 }
             }
 
             for (let i = 0; i <= beetlePatternSize; i+=beetlePatternSize/stripeCount) {
                 for (let j = 0; j <= beetlePatternSize; j+=10/6) {
-                    this.pattern.fill(this.palette.dark);
+                    this.pattern.fill(this.palette.black);
                     this.pattern.ellipse(i+random(-2, 2)/6, j+random(-2, 2)/6, random(stripeThickness/2, stripeThickness/2+20/6));
                 }
             }
@@ -292,14 +292,14 @@ class BeetleGen {
 
             for (let i = 0; i <= beetlePatternSize; i+=30/6) {
                 for (let j = 0; j <= beetlePatternSize; j+=beetlePatternSize/stripeCount) {
-                    this.pattern.fill(this.palette.light);
+                    this.pattern.fill(this.palette.mid);
                     this.pattern.ellipse(i+random(-2, 2)/6, j+random(-2, 2)/6, random(stripeThickness, stripeThickness+50/6));
                 }
             }
 
             for (let i = 0; i <= beetlePatternSize; i+=30/6) {
                 for (let j = 0; j <= beetlePatternSize; j+=beetlePatternSize/stripeCount) {
-                    this.pattern.fill(this.palette.dark);
+                    this.pattern.fill(this.palette.black);
                     this.pattern.ellipse(i+random(-2, 2)/6, j+random(-2, 2)/6, random(60/6));
                 }
             }
