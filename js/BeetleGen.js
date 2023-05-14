@@ -521,7 +521,7 @@ class Splat {
         for (let i = 0; i < this.splatCount; i++) {
             this.splats[i].pos = this.splats[i].pos.lerp(createVector(0, 0), 0.05);
             this.splats[i].size = lerp(this.splats[i].size, 0, this.splats[i].sizeSpeed);
-            this.splats[i].alpha = lerp(this.splats[i].alpha, 0, 0.08);
+            this.splats[i].alpha = lerp(this.splats[i].alpha, 0, 0.06);
         }
     }
 

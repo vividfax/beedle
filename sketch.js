@@ -640,7 +640,8 @@ function displayInventory() {
 
             textAlign(CENTER);
             textSize(20);
-            let speech = tradingPortraitAventurer.inFight ? '"Argh!"' : '"Hello!"';
+            // let speech = tradingPortraitAventurer.inFight ? '"Argh!"' : '"Hello!"';
+            let speech = '"Hello!"';
             text(speech, 33, 270-60 + sin(frameCount*3)*3);
         }
         image(adventurerImages[tradingPortraitAventurer.number], 33, 270-15, tradingPortraitSize, tradingPortraitSize);
