@@ -60,6 +60,7 @@ class BeetleGen {
 
         this.appearing = false;
         this.appearingTimer = -100;
+        this.paintRotateOffset = random(360);
 
         this.appearPos = createVector(0.1, 0.1);
         this.appearPos = this.appearPos.setHeading(random(360));
@@ -126,7 +127,7 @@ class BeetleGen {
             image(this.transparentImage, 0, 0, this.radius, this.radius);
             if (this.appearingTimer*5 < 255) {
                 tint(255, this.appearingTimer*5);
-                this.confetti.display(-1+cos(frameCount*4)*3, -1-20+sin(frameCount*4)*3);
+                this.confetti.display(-1+cos((frameCount+this.paintRotateOffset)*4)*3, -1-20+sin((frameCount+this.paintRotateOffset)*4)*3);
             }
             image(this.image, -1, -1, this.radius, this.radius);
             noTint();
