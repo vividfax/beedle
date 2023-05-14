@@ -185,7 +185,6 @@ class Adventurer {
             this.dead = true;
             shouts.push(new Shout(this.x, this.y, -1));
             this.dropAll();
-            this.init(false);
 
             for (let j = 0; j < beedles.length; j++) {
                 let distance = dist(beedles[j].x, beedles[j].y, this.x, this.y);
@@ -194,6 +193,7 @@ class Adventurer {
                     break;
                 }
             }
+            this.init(false);
             return;
         }
 
