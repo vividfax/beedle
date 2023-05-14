@@ -64,6 +64,7 @@ class Adventurer {
         this.carryingBeetle = false;
 
         this.inFight = false;
+        this.trading = false;
     }
 
     update() {
@@ -148,6 +149,7 @@ class Adventurer {
         if (this.dead) return;
 
         this.inFight = false;
+        this.trading = false;
 
         for (let i = 0; i < monsters.length; i++) {
             if (this.collide(monsters[i])) {
@@ -165,15 +167,17 @@ class Adventurer {
             }
         }
 
-        for (let i = 0; i < beedles.length; i++) {
-            if (this.collide(beedles[i])) {
-                if (!beedles[i].tradingInvincible) {
-                    beedles[i].trading = true;
-                    beedles[i].tradingInvincible = true;
-                    beedles[i].tradingWith = this;
+        if (!this.inFight) {
+            for (let i = 0; i < beedles.length; i++) {
+                if (this.collide(beedles[i])) {
+                    if (!beedles[i].tradingInvincible) {
+                        beedles[i].trading = true;
+                        beedles[i].tradingInvincible = true;
+                        beedles[i].tradingWith = this;
+                    }
+                    if (!this.trading && beedles[i].tradingWith == this) this.trading = true;
+                    break;
                 }
-                if (!this.inFight && beedles[i].tradingWith == this) this.inFight = true;
-                break;
             }
         }
 
@@ -193,7 +197,7 @@ class Adventurer {
             return;
         }
 
-        if (!this.dead && !this.inFight) {
+        if (!this.dead && !this.inFight && !this.trading) {
 
             if (!this.headingHome && !this.passingThroughTown && this.inventory.gems >= 5) {
                 this.headingHome = true;

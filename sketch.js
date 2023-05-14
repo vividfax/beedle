@@ -452,8 +452,8 @@ function createBackground() {
 
     let multiplier = 1;
 
-    let mapWidth = width/size-inventoryWidth;
-    let mapHeight = height/size;
+    let mapWidth = int(width/size-inventoryWidth);
+    let mapHeight = int(height/size);
 
     let w = mapWidth * multiplier;
     let h = mapHeight * multiplier;
@@ -533,8 +533,8 @@ function createTerrain() {
 
 function createMapCutout() {
 
-    let w = width/size-inventoryWidth;
-    let h = height/size;
+    let w =int(width/size-inventoryWidth);
+    let h = int(height/size);
 
     mapCutoutLayer = createGraphics(w, h);
     mapCutoutLayer.noStroke();
@@ -548,7 +548,7 @@ function createMapCutout() {
 
     mapCutoutLayer.beginContour();
 
-    let interval = 50;
+    let interval = 70;
     let bumpiness = 5;
 
     for (let i = bumpiness; i < w; i += interval) {
@@ -682,8 +682,8 @@ function moveBeedles() {
 
 function createFog() {
 
-    let w = width/size-inventoryWidth;
-    let h = height/size;
+    let w = int(width/size-inventoryWidth);
+    let h = int(height/size);
 
     fogLayer = createGraphics(w, h);
 
