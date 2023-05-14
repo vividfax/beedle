@@ -187,13 +187,13 @@ class Adventurer {
             shouts.push(new Shout(this.x, this.y, -1));
             this.dropAll();
 
-            for (let j = 0; j < beedles.length; j++) {
-                let distance = dist(beedles[j].x, beedles[j].y, this.x, this.y);
-                if (distance < beedleVisionRadius) {
-                    player.epicBattleWitness++;
-                    break;
-                }
-            }
+            // for (let j = 0; j < beedles.length; j++) {
+            //     let distance = dist(beedles[j].x, beedles[j].y, this.x, this.y);
+            //     if (distance < beedleVisionRadius) {
+            //         player.epicBattleWitness++;
+            //         break;
+            //     }
+            // }
             this.init(false);
             return;
         }

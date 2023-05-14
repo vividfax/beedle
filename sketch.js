@@ -112,8 +112,10 @@ function setup() {
     textAlign(CENTER, CENTER);
     canvas.addEventListener('contextmenu', event => event.preventDefault());
 
-    player = new Player(width/size/2-inventoryWidth/2, height/size/2);
     shuffle(beedleLineColours, true);
+    shuffle(adventurerImages, true);
+
+    player = new Player(width/size/2-inventoryWidth/2, height/size/2);
 
     for (let i = 0; i < 1; i++) {
         beedles.push(new Beedle(width/size/2-inventoryWidth/2, height/size/2, i));
@@ -209,7 +211,7 @@ function update() {
     }
 
     for (let i = 0; i < targets.length; i++) {
-        targets[i].radius = (20-int(i/beedles.length))/20*9;
+        targets[i].radius = (20-i)/20*9;
         if (targets[i].radius < 3) targets[i].radius = 3;
         targets[i].update();
     }
