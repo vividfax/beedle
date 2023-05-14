@@ -136,7 +136,7 @@ function setup() {
 
     for (let i = 0; i < 3; i++) {
         adventurers.push(new Adventurer(i));
-        adventurers[i].init(false);
+        // adventurers[i].init(false);
     }
 
     for (let i = 0; i < 12; i++) {
