@@ -57,11 +57,29 @@ class BeetleGen {
         this.caught = false;
         this.description = questDescriptions[index];
         this.number = -1;
+
+        this.appearing = false;
+        this.appearingTimer = -60;
+
+        this.appearPos = createVector(0.1, 0.1);
+        this.appearPos = this.appearPos.setHeading(random(360));
+        this.appearPos = this.appearPos.mult(500);
+
+        this.confetti = new Confetti(0, 0, this.palette, this.radius);
     }
 
     update() {
 
-        if (this.caught) return;
+        if (compendiumVisible && this.appearing && this.appearingTimer > 60*5) {
+            this.appearing = false;
+        } else if (compendiumVisible && this.caught) {
+            if (!this.appearing) this.appearing = true;
+            this.appearingTimer++;
+            if (this.appearingTimer*5 < 255 && this.appearingTimer >= 0) this.confetti.update();
+            return;
+        } else if (this.caught) {
+            return;
+        }
 
         this.unlocked = false;
 
@@ -91,7 +109,13 @@ class BeetleGen {
         push();
         translate(this.x, this.y);
 
-        if (this.caught) {
+        if (this.caught && this.appearing) {
+
+            let targetPos = createVector(0, 0);
+            this.appearPos.lerp(targetPos, 0.05);
+            let x = this.appearPos.x;
+            let y = this.appearPos.y;
+
             textFont(beetleDescriptionFont);
             textSize(30);
             textLeading(30);
@@ -99,10 +123,25 @@ class BeetleGen {
             fill(0, 100);
             text(this.number, 0, this.radius/4+5);
 
-            image(this.transparentImage, 1, 1, this.radius, this.radius);
-            image(this.image, 0, 0, this.radius, this.radius);
-        }
-        else {
+            image(this.transparentImage, 0, 0, this.radius, this.radius);
+            if (this.appearingTimer*5 < 255) {
+                tint(255, this.appearingTimer*5);
+                this.confetti.display(-1, -1-20);
+            }
+            image(this.image, -1, -1, this.radius, this.radius);
+            noTint();
+        } else if (this.caught && !this.appearing) {
+
+            textFont(beetleDescriptionFont);
+            textSize(30);
+            textLeading(30);
+            noStroke();
+            fill(0, 100);
+            text(this.number, 0, this.radius/4+5);
+
+            image(this.transparentImage, 0, 0, this.radius, this.radius);
+            image(this.image, -1, -1, this.radius, this.radius);
+        } else {
 
             image(this.transparentImage, 0, 0, this.radius, this.radius);
 
@@ -426,5 +465,80 @@ class CirclePack {
         this.pattern.fill(this.palette.dark);
         this.pattern.ellipse(this.x, this.y, this.radius);
         this.pattern.pop();
+    }
+}
+
+class Confetti {
+
+    constructor(x, y, palette, targetSize) {
+
+        this.x = x;
+        this.y = y;
+        this.targetSize = targetSize/5;
+
+        this.confettiNumber = 10;
+        this.confetti = [];
+
+        for (let i = 0; i < this.confettiNumber; i++) {
+
+            let colour = random([palette.mid, palette.dark, palette.black]);
+
+            this.confetti.push({
+                pos: this.randomPos(),
+                size: random(targetSize*.1, targetSize*.4),
+                colour: colour,
+                alpha: 255,
+                sizeSpeed: random(0.0005, 0.05),
+            });
+        }
+
+        this.done = false;
+    }
+
+    update() {
+
+        for (let i = 0; i < this.confettiNumber; i++) {
+            this.confetti[i].pos = this.confetti[i].pos.lerp(createVector(0, 0), 0.025);
+            this.confetti[i].size = lerp(this.confetti[i].size, 0, this.confetti[i].sizeSpeed);
+            this.confetti[i].alpha = lerp(this.confetti[i].alpha, 0, 0.08);
+        }
+    }
+
+    randomPos() {
+
+        let pos = createVector(0.1, 0.1);
+        pos = pos.setHeading(random(360));
+        pos = pos.mult(random(this.targetSize*5));
+        return pos;
+    }
+
+    display(x, y) {
+
+        push();
+        translate(x, y);
+
+        for (let i = 0; i < this.confettiNumber; i++) {
+
+            if (this.confetti[i].alpha-255+10 < 0) break;
+
+            push();
+            translate(this.confetti[i].pos.x, this.confetti[i].pos.y+30);
+            fill(0, this.confetti[i].alpha-255+10);
+            ellipse(1, 1, this.confetti[i].size+5);
+            pop();
+        }
+
+        for (let i = 0; i < this.confettiNumber; i++) {
+
+            push();
+            translate(this.confetti[i].pos.x, this.confetti[i].pos.y+30);
+            let colour = color(this.confetti[i].colour);
+            colour.setAlpha(this.confetti[i].alpha);
+            fill(colour);
+            ellipse(0, 0, this.confetti[i].size);
+            pop();
+        }
+
+        pop();
     }
 }

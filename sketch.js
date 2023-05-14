@@ -159,6 +159,7 @@ function draw() {
 
 function update() {
 
+    compendium.update();
     if (compendiumVisible) return;
 
     popupSelected = 0;
@@ -219,8 +220,6 @@ function update() {
         buyingBeetleDebt--;
         score--;
     }
-
-    compendium.update();
 }
 
 function display() {
@@ -238,7 +237,7 @@ function display() {
         stroke("#333");
         strokeWeight(1);
         noFill();
-        rect(0, 0, -(width/size-inventoryWidth), height/size-1);
+        rect(0, 0, -(width/size-inventoryWidth), height/size);
         pop();
 
         compendium.display();
@@ -304,7 +303,7 @@ function display() {
     stroke("#333");
     strokeWeight(1);
     noFill();
-    rect(0, 0, width/size-inventoryWidth, height/size-1);
+    rect(0, 0, width/size-inventoryWidth, height/size);
     displayInventory();
     displayPopup();
 }
