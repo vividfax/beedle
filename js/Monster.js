@@ -21,6 +21,7 @@ class Monster {
         }
 
         this.radius = this.bigBad ? 45 : 15;
+        this.visualRadius = this.radius;
         this.speed = 0.8 - this.radius/100;
         this.velocityX = random(-this.speed, this.speed);
         this.velocityY = random(-this.speed, this.speed);
@@ -39,6 +40,8 @@ class Monster {
     update() {
 
         if (this.dead) return;
+
+        if (this.visualRadius < this.radius) this.visualRadius += 0.5;
 
         this.inFight = false;
 
@@ -74,6 +77,20 @@ class Monster {
         for (let i = 0; i < animals.length; i++) {
             if (this.collide(animals[i])) {
                 if (!this.inFight) this.inFight = true;
+                break;
+            }
+        }
+
+        for (let i = 0; i < towns.length; i++) {
+            if (this.collide(towns[i])) {
+                
+                if (frameCount%20 != 1) break;
+
+                for (let [key, value] of Object.entries(towns[i].inventory)) {
+                    if (value > 0) {
+                        towns[i].inventory[key.toString()]--;
+                    }
+                }
                 break;
             }
         }
@@ -197,7 +214,7 @@ class Monster {
 
         noStroke();
         fill(50, opacity);
-        ellipse(this.x, this.y, this.radius+4);
+        ellipse(this.x, this.y, this.visualRadius+4);
 
         noFill();
         strokeWeight(1.5);
@@ -205,8 +222,8 @@ class Monster {
         healthColour.setAlpha(opacity);
         stroke(healthColour);
         let degree = this.hitpoints/this.maxHitpoints*360;
-        if (degree >= 360) ellipse(this.x, this.y, this.radius);
-        else arc(this.x, this.y, this.radius, this.radius, -90+(360-degree), -90);
+        if (degree >= 360) ellipse(this.x, this.y, this.visualRadius);
+        else arc(this.x, this.y, this.visualRadius, this.visualRadius, -90+(360-degree), -90);
 
         pop();
     }

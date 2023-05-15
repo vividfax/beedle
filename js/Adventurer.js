@@ -14,20 +14,24 @@ class Adventurer {
 
     init(fresh) {
 
+        this.radius = 30;
+
         if (!fresh) {
             this.x = this.checkpoint.x;
             this.y = this.checkpoint.y;
+            this.respawnTimer = 60*5;
+            this.visualRadius = 0;
         } else {
             this.edgePadding = 60;
             this.x = random(this.edgePadding, width/size-this.edgePadding-inventoryWidth);
             this.y = random(this.edgePadding, height/size-this.edgePadding);
+            this.respawnTimer = 0;
+            this.visualRadius = this.radius;
         }
 
         this.speed = 1;
         this.velocityX = random(-this.speed, this.speed);
         this.velocityY = random(-this.speed, this.speed);
-
-        this.radius = 30;
 
         this.isCarrying = false;
         this.isRare = false;
@@ -79,6 +83,13 @@ class Adventurer {
     update() {
 
         if (this.dead) return;
+
+        if (this.respawnTimer > 0) {
+            this.respawnTimer--;
+            return;
+        }
+
+        if (this.visualRadius < this.radius) this.visualRadius += 0.5;
 
         if (this.velocity < 1) {
             this.velocity += 0.001;
@@ -477,6 +488,7 @@ class Adventurer {
     display() {
 
         if (this.dead) return;
+        if (this.respawnTimer > 0) return;
 
         let opacity = 0;
 
@@ -501,7 +513,7 @@ class Adventurer {
 
         noStroke();
         fill(255, opacity);
-        ellipse(this.x, this.y, this.radius+4);
+        ellipse(this.x, this.y, this.visualRadius+4);
 
         if (this.carryingBeetle) {
             let borderWeight = sin(frameCount*3)*3 + 4;
@@ -509,24 +521,24 @@ class Adventurer {
             colour.setAlpha(opacity);
             stroke(colour);
             strokeWeight(borderWeight);
-            ellipse(this.x, this.y, this.radius+borderWeight);
+            ellipse(this.x, this.y, this.visualRadius+borderWeight);
         }
 
         noStroke();
         fill(255, 255, 255, opacity);
-        ellipse(this.x, this.y, this.radius);
-        image(adventurerTints[this.number][int(opacity/10)], this.x, this.y, this.radius, this.radius);
+        ellipse(this.x, this.y, this.visualRadius);
+        image(adventurerTints[this.number][int(opacity/10)], this.x, this.y, this.visualRadius, this.visualRadius);
 
         noFill();
         strokeWeight(1.5);
         stroke(0, 0, 0, opacity);
-        ellipse(this.x, this.y, this.radius);
+        ellipse(this.x, this.y, this.visualRadius);
         let healthColour = color("#D78471");
         healthColour.setAlpha(opacity);
         stroke(healthColour);
         let degree = this.hitpoints/this.maxHitpoints*360;
-        if (degree >= 360) ellipse(this.x, this.y, this.radius);
-        else arc(this.x, this.y, this.radius, this.radius, -90+(360-degree), -90);
+        if (degree >= 360) ellipse(this.x, this.y, this.visualRadius);
+        else arc(this.x, this.y, this.visualRadius, this.visualRadius, -90+(360-degree), -90);
 
         pop();
     }

@@ -148,7 +148,7 @@ function setup() {
     }
 
     for (let i = 0; i < 45; i++) {
-        animals.push(new Animal());
+        animals.push(new Animal(true));
     }
 
     // console.log(int(monsters.length/6)-1);

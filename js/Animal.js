@@ -1,17 +1,19 @@
 class Animal {
 
-    constructor() {
+    constructor(fresh) {
 
-        this.init();
+        this.init(fresh);
     }
 
-    init() {
+    init(fresh) {
 
         this.edgePadding = 60;
         this.x = random(this.edgePadding, width/size-this.edgePadding-inventoryWidth);
         this.y = random(this.edgePadding, height/size-this.edgePadding);
 
         this.radius = 10;
+        this.visualRadius = 0;
+        if (fresh) this.visualRadius = this.radius;
         this.speed = 0.2;
         this.velocityX = random(-this.speed, this.speed);
         this.velocityY = random(-this.speed, this.speed);
@@ -25,6 +27,8 @@ class Animal {
     update() {
 
         if (this.dead) return;
+
+        if (this.visualRadius < this.radius) this.visualRadius += 0.5;
 
         for (let i = 0; i < towns.length; i++) {
             if (this.collide(towns[i])) {
@@ -121,7 +125,7 @@ class Animal {
 
         noStroke();
         fill(200, opacity-200);
-        ellipse(this.x, this.y, this.radius);
+        ellipse(this.x, this.y, this.visualRadius);
 
         pop();
     }
