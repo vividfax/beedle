@@ -374,7 +374,7 @@ class Adventurer {
                     this.timeBetweenGemDrops = 0;
                     break;
                 }
-                if (this.timeBetweenDrops > mountains.length/4) {
+                if (this.timeBetweenDrops > mountains.length*0.4) {
 
                     if (this.inventory.stone < maxResourceCarry) {
                         this.inventory.stone++;
@@ -394,7 +394,7 @@ class Adventurer {
             if (this.collide(forests[i])) {
                 timerTick = true;
 
-                if (this.timeBetweenDrops > forests.length/4) {
+                if (this.timeBetweenDrops > forests.length*0.4) {
 
                     if (this.inventory.wood < maxResourceCarry) {
                         this.inventory.wood++;
