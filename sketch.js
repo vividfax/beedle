@@ -68,6 +68,8 @@ let beedleLineColours = ["#FF96EE", "#FFABAB", "#FFBC74", "#7AF587", "#7DF8D7", 
 
 let guideWords, commonWords;
 
+let startTime;
+
 function preload() {
 
     lootImages.stone = loadImage("./images/Stone.png");
