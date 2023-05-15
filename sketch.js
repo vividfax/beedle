@@ -66,7 +66,7 @@ let tradingPortraitSize = 0;
 // https://coolors.co/ffdada-c4ffd1-c9e5ff-cac4ff
 let beedleLineColours = ["#FF96EE", "#FFABAB", "#FFBC74", "#7AF587", "#7DF8D7", "#88C5FF", "#9580FF", "#BC88FF", "#FFDADA", "#C4FFD1", "#C9E5FF", "#CAC4FF"];
 
-let guideWords, commonWords;
+let syllables, realWords;
 
 let startTime;
 
@@ -94,8 +94,8 @@ function preload() {
     cartoonFont = loadFont("./fonts/ConcertOne-Regular.ttf");
     targetCrossFont = loadFont("./fonts/ArchitectsDaughter-Regular.ttf");
 
-    guideWords = loadJSON("./json/guide-words.json");
-    commonWords = loadJSON("./json/common-words.json");
+    syllables = loadStrings("./txt/syllables.txt");
+    realWords = loadStrings("./txt/real-words.txt");
 }
 
 function setup() {

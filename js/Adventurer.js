@@ -41,7 +41,7 @@ class Adventurer {
         this.maxHitpoints = 40;
         this.hitpoints = this.maxHitpoints;
         this.healPoints = 0;
-        this.dead = false;
+        this.dead = true;
         this.visible = false;
 
         this.timeBetweenDrops = 0;
@@ -82,12 +82,14 @@ class Adventurer {
 
     update() {
 
-        if (this.dead) return;
-
         if (this.respawnTimer > 0) {
             this.respawnTimer--;
             return;
+        } else if (this.dead) {
+            this.dead = false;
         }
+
+        if (this.dead) return;
 
         if (this.visualRadius < this.radius) this.visualRadius += 0.5;
 
@@ -197,7 +199,6 @@ class Adventurer {
         }
 
         if (this.hitpoints < 0) {
-            this.dead = true;
             shouts.push(new Shout(this.x, this.y, -1));
             this.dropAll();
 

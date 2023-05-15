@@ -81,19 +81,19 @@ class Monster {
             }
         }
 
-        for (let i = 0; i < towns.length; i++) {
-            if (this.collide(towns[i])) {
-                
-                if (frameCount%20 != 1) break;
+        // for (let i = 0; i < towns.length; i++) {
+        //     if (this.collide(towns[i])) {
 
-                for (let [key, value] of Object.entries(towns[i].inventory)) {
-                    if (value > 0) {
-                        towns[i].inventory[key.toString()]--;
-                    }
-                }
-                break;
-            }
-        }
+        //         if (frameCount%20 != 1) break;
+
+        //         for (let [key, value] of Object.entries(towns[i].inventory)) {
+        //             if (value > 0) {
+        //                 towns[i].inventory[key.toString()]--;
+        //             }
+        //         }
+        //         break;
+        //     }
+        // }
 
         for (let i = 0; i < caravans.length; i++) {
             if (this.collide(caravans[i])) {

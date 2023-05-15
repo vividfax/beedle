@@ -7,14 +7,14 @@ class Town {
         this.townNumber = townNumber;
 
         this.name = this.createName();
-        if (townNames.includes(this.name) || commonWords.words.includes(this.name.toLowerCase())) this.name = this.createName();
+        if (townNames.includes(this.name) || realWords.includes(this.name.toLowerCase())) this.name = this.createName();
         townNames.push(this.name);
 
         this.x = x;
         this.y = y;
 
         if (x == undefined) {
-            this.edgePadding = 200;
+            this.edgePadding = 150;
             this.x = random(this.edgePadding, width/size-this.edgePadding-inventoryWidth);
             this.y = random(this.edgePadding, height/size-this.edgePadding);
 
@@ -112,7 +112,7 @@ class Town {
 
         for (let i = 0; i < towns.length; i++) {
 
-            if (dist(this.x, this.y, towns[i].x, towns[i].y) < 200) return true;
+            if (dist(this.x, this.y, towns[i].x, towns[i].y) < 150) return true;
         }
     }
 
@@ -136,9 +136,9 @@ class Town {
 
     createName() {
 
-        let prefix = random(guideWords.words);
-        let mid = random(guideWords.words)
-        let suffix = random(guideWords.words);
+        let prefix = random(syllables);
+        let mid = random(syllables)
+        let suffix = random(syllables);
 
         let name = [prefix, mid, suffix].join("");
         name = name.slice(0, int(random(4, 8)));
