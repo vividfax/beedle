@@ -73,7 +73,7 @@ class BeetleGen {
 
         if (compendiumVisible && this.appearing && this.appearingTimer > 60*5) {
             this.appearing = false;
-        } else if (compendiumVisible && this.caught) {
+        } else if (compendiumVisible && this.caught && this.appearingTimer <= 60*5) {
             if (!this.appearing) this.appearing = true;
             this.appearingTimer++;
             if (this.appearingTimer*5 < 255 && this.appearingTimer >= 0) this.splat.update();
@@ -118,8 +118,7 @@ class BeetleGen {
             let y = this.appearPos.y;
 
             textFont(beetleDescriptionFont);
-            textSize(30);
-            textLeading(30);
+            textSize(25);
             noStroke();
             fill(0, 100);
             text(this.number, 0, this.radius/4+5);
@@ -134,8 +133,7 @@ class BeetleGen {
         } else if (this.caught && !this.appearing) {
 
             textFont(beetleDescriptionFont);
-            textSize(30);
-            textLeading(30);
+            textSize(25);
             noStroke();
             fill(0, 100);
             text(this.number, 0, this.radius/4+5);

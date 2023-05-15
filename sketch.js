@@ -119,6 +119,8 @@ function setup() {
     textAlign(CENTER, CENTER);
     canvas.addEventListener('contextmenu', event => event.preventDefault());
 
+    startTime = new Date().getTime();
+
     shuffle(beedleLineColours, true);
     shuffle(adventurerImages, true);
 
@@ -357,7 +359,7 @@ function mousePressed() {
 
     let edgePadding = 30;
 
-    if (mouseX > width-edgePadding*3-inventoryWidth || mouseX < edgePadding || mouseY > height-edgePadding || mouseY < edgePadding) return;
+    if (mouseX > width-edgePadding-inventoryWidth || mouseX < edgePadding || mouseY > height-edgePadding || mouseY < edgePadding) return;
 
     unassignWaypoints();
 

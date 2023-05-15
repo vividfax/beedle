@@ -55,7 +55,18 @@ class Compendium {
 
             if (this.genBeetles[index].unlocked && !this.genBeetles[index].caught) {
                 this.genBeetles[index].caught = true;
-                this.genBeetles[index].number = this.numberUnlocked;
+
+                let timeThisFrame = new Date().getTime();
+                let timeString = int((timeThisFrame-startTime)/1000);
+                let hours = int(timeString/60/60);
+                let minutes = int(timeString/60)%60;
+                if (hours > 0 && minutes < 10) minutes = "0"+minutes;
+                if (hours > 0) {
+                    timeString = hours+":"+minutes;
+                } else if (minutes > 0) {
+                    timeString = minutes;
+                }
+                this.genBeetles[index].number = timeString;
                 break;
             }
         }

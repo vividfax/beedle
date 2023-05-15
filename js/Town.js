@@ -88,7 +88,7 @@ class Town {
         this.lastCaravanSent++;
 
         if (this.resourceCapacity >= 100 && towns.length < 5 && caravans.length == 0 && this.inventory.wood >= this.resourceCapacity && this.inventory.stone >= this.resourceCapacity) {
-            if (this.lastCaravanSent > 60*30) {
+            if (this.lastCaravanSent > 60*60*2) {
                 this.inventory.stone = 0;
                 this.inventory.wood = 0;
                 this.birthCaravan();
