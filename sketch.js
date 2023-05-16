@@ -167,6 +167,7 @@ function setup() {
 
 function draw() {
 
+    // console.log(frameRate());
     if (frameCount > 30 && frameRate() < 30) console.log('dropped frame ' + frameCount);
 
     hoverOverInventory();
@@ -716,7 +717,7 @@ function createFog() {
 
     fogLayer = createGraphics(w, h);
 
-    let spacing = 30;
+    let spacing = 60;
 
     for (let i = 0; i < w; i += spacing) {
         for (let j = 0; j < h; j += spacing) {
@@ -724,7 +725,7 @@ function createFog() {
             fogCircles.push({
                 x: i + random(-15, 15),
                 y: j + random(-15, 15),
-                radius: random(75, 105),
+                radius: random(75, 105)/30*spacing,
                 breatheOffset: random(360),
             })
         }
@@ -738,7 +739,7 @@ function displayFog() {
 
     for (let i = 0; i < fogCircles.length; i++) {
 
-        let fogAlpha = 50;
+        let fogAlpha = 60;
 
         for (let j = 0; j < beedles.length; j++) {
 
